@@ -1,6 +1,5 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   
-</head>
+<?php include('Views/_partials/header.php'); ?>
+
 <body>
     <div class="dashboard">
         <!-- Sidebar -->
@@ -251,3 +250,5 @@
                 alert('User profile menu would open here');
             });
         });
+
+        <?php include('Views/_partials/footer.php'); ?>
