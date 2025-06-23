@@ -1,5 +1,6 @@
 <?php include('Views/_partials/header.php'); ?>
 
+
         <!-- Main Content -->
         <div class="main-content">
             <!-- Header -->
@@ -215,5 +216,5 @@
                 alert('User profile menu would open here');
             });
         });
-
+</script>
         <?php include('Views/_partials/footer.php'); ?>
