@@ -10,7 +10,10 @@ switch ($action)
          * List all albums
          */
         case 'home':
-                include('Views/IndexView.php');
+                include('Views/home.php');
+                exit();
+        case 'dashboard':
+                include('Views/dashboard.php');
                 exit();
         case 'users':
                 include('Views/users.php');
