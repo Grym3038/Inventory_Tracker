@@ -1,265 +1,252 @@
--- purge all data so we start fresh, LOL
-TRUNCATE
-  inventory_snapshot_entries,
-  inventory_snapshots,
-  api_keys,
-  reports,
-  tickets,
-  restock_requests,
-  inventory_float_entries,
-  inventory_floats,
-  items,
-  users,
-  clients
-RESTART IDENTITY CASCADE;
+-- -------------------------------------------------------------------
+-- Drop everything
+-- -------------------------------------------------------------------
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS inventory_snapshot_entries;
+DROP TABLE IF EXISTS inventory_snapshots;
+DROP TABLE IF EXISTS api_keys;
+DROP TABLE IF EXISTS reports;
+DROP TABLE IF EXISTS tickets;
+DROP TABLE IF EXISTS restock_requests;
+DROP TABLE IF EXISTS inventory_float_entries;
+DROP TABLE IF EXISTS inventory_floats;
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS oauth_tokens;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS clients;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- ------------------------------------------------
--- SCHEMA DEFINITIONS
+-- SCHEMA
 -- ------------------------------------------------
 
--- tenants table, yay
-DROP TABLE IF EXISTS clients CASCADE;
+-- Clients (tenants)
 CREATE TABLE clients (
-  id          SERIAL PRIMARY KEY,
-  name        VARCHAR NOT NULL,
-  domain      VARCHAR UNIQUE NOT NULL,  -- gotta have a domain duh
-  created_at  TIMESTAMP NOT NULL DEFAULT now()
-);
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name        VARCHAR(255)    NOT NULL,
+  -- index prefix to stay under 1000-byte limit (191×4=764 bytes)
+  domain      VARCHAR(255)    NOT NULL,
+  created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_clients_domain (domain(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- users, store peeps
-DROP TABLE IF EXISTS users CASCADE;
+-- Users (store owners & employees)
 CREATE TABLE users (
-  id            SERIAL PRIMARY KEY,
-  client_id     INT NOT NULL REFERENCES clients(id),
-  name          VARCHAR NOT NULL,
-  email         VARCHAR UNIQUE NOT NULL,
-  password_hash VARCHAR NOT NULL,      -- store those hashes!
-  role          VARCHAR NOT NULL,      -- 'owner' or 'employee'
-  created_at    TIMESTAMP NOT NULL DEFAULT now()
-);
-CREATE INDEX idx_users_client ON users(client_id);
+  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_id      INT UNSIGNED NOT NULL,
+  name           VARCHAR(255)    NOT NULL,
+  email          VARCHAR(255)    NOT NULL,
+  password_hash  VARCHAR(255),
+  role           VARCHAR(50)     NOT NULL,  -- 'owner' or 'employee'
+  created_at     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- stuff we track
-DROP TABLE IF EXISTS items CASCADE;
+  -- OAuth fields
+  oauth_provider VARCHAR(50)     NOT NULL DEFAULT 'local',
+  google_id      VARCHAR(191),              -- indexed prefix
+  oauth_avatar   VARCHAR(512),
+  oauth_id_token TEXT,
+
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_users_email       (email),
+  UNIQUE KEY uq_users_google_id   (google_id),
+  INDEX idx_users_client          (client_id),
+  CONSTRAINT fk_users_client
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- OAuth tokens (if you want to store access/refresh tokens)
+CREATE TABLE oauth_tokens (
+  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id        INT UNSIGNED NOT NULL,
+  provider       VARCHAR(50)     NOT NULL,  -- e.g. 'google'
+  access_token   TEXT            NOT NULL,
+  refresh_token  TEXT,
+  expires_at     TIMESTAMP,
+  created_at     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_oauth_user_provider (user_id, provider),
+  INDEX idx_oauth_user             (user_id),
+  CONSTRAINT fk_oauth_tokens_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Inventory items
 CREATE TABLE items (
-  id             SERIAL PRIMARY KEY,
-  client_id      INT NOT NULL REFERENCES clients(id),
-  sku            VARCHAR UNIQUE NOT NULL,
-  name           VARCHAR NOT NULL,
-  threshold_qty  INT NOT NULL,
-  current_qty    INT NOT NULL,
-  created_at     TIMESTAMP NOT NULL DEFAULT now()
-);
-CREATE INDEX idx_items_client ON items(client_id);
+  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_id      INT UNSIGNED NOT NULL,
+  sku            VARCHAR(255)    NOT NULL,
+  name           VARCHAR(255)    NOT NULL,
+  threshold_qty  INT             NOT NULL,
+  current_qty    INT             NOT NULL,
+  created_at     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- daily float, messy floats
-DROP TABLE IF EXISTS inventory_floats CASCADE;
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_items_sku     (sku),
+  INDEX idx_items_client      (client_id),
+  CONSTRAINT fk_items_client
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Daily inventory floats
 CREATE TABLE inventory_floats (
-  id            SERIAL PRIMARY KEY,
-  client_id     INT NOT NULL REFERENCES clients(id),
-  float_date    DATE NOT NULL,
-  status        VARCHAR NOT NULL,  -- 'open' or 'finalized'
-  generated_at  TIMESTAMP NOT NULL DEFAULT now(),
-  UNIQUE (client_id, float_date)
-);
+  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_id    INT UNSIGNED NOT NULL,
+  float_date   DATE            NOT NULL,
+  status       VARCHAR(50)     NOT NULL,  -- 'open' or 'finalized'
+  generated_at TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- float entries before manager thumbs up
-DROP TABLE IF EXISTS inventory_float_entries CASCADE;
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_floats_client_date (client_id, float_date),
+  INDEX idx_floats_client         (client_id),
+  CONSTRAINT fk_floats_client
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Float entries awaiting approval
 CREATE TABLE inventory_float_entries (
-  id               SERIAL PRIMARY KEY,
-  float_id         INT NOT NULL REFERENCES inventory_floats(id),
-  item_id          INT NOT NULL REFERENCES items(id),
-  reported_qty     INT NOT NULL,
-  approved         BOOLEAN NOT NULL DEFAULT false,
-  approved_qty     INT,            -- manager-adjusted
-  manager_id       INT REFERENCES users(id),
-  approved_at      TIMESTAMP,
-  created_at       TIMESTAMP NOT NULL DEFAULT now()
-);
+  id            INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  float_id      INT UNSIGNED  NOT NULL,
+  item_id       INT UNSIGNED  NOT NULL,
+  reported_qty  INT           NOT NULL,
+  approved      BOOLEAN       NOT NULL DEFAULT FALSE,
+  approved_qty  INT,
+  manager_id    INT UNSIGNED,
+  approved_at   TIMESTAMP,
+  created_at    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- employees restock
-DROP TABLE IF EXISTS restock_requests CASCADE;
+  PRIMARY KEY (id),
+  INDEX idx_ife_float   (float_id),
+  INDEX idx_ife_item    (item_id),
+  INDEX idx_ife_manager (manager_id),
+  CONSTRAINT fk_ife_float
+    FOREIGN KEY (float_id) REFERENCES inventory_floats(id)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_ife_item
+    FOREIGN KEY (item_id) REFERENCES items(id)
+      ON DELETE RESTRICT,
+  CONSTRAINT fk_ife_manager
+    FOREIGN KEY (manager_id) REFERENCES users(id)
+      ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Restock requests
 CREATE TABLE restock_requests (
-  id             SERIAL PRIMARY KEY,
-  entry_id       INT NOT NULL REFERENCES inventory_float_entries(id),
-  requested_qty  INT NOT NULL,
-  status         VARCHAR NOT NULL,  -- 'pending','approved','rejected','completed'
-  manager_id     INT REFERENCES users(id),
-  employee_id    INT REFERENCES users(id),
-  requested_at   TIMESTAMP NOT NULL DEFAULT now(),
+  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  entry_id       INT UNSIGNED NOT NULL,
+  requested_qty  INT           NOT NULL,
+  status         VARCHAR(50)   NOT NULL,  -- 'pending','approved','rejected','completed'
+  manager_id     INT UNSIGNED,
+  employee_id    INT UNSIGNED,
+  requested_at   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   responded_at   TIMESTAMP,
-  completed_at   TIMESTAMP
-);
+  completed_at   TIMESTAMP,
 
--- notifications, cuz tickets are cool
-DROP TABLE IF EXISTS tickets CASCADE;
+  PRIMARY KEY (id),
+  INDEX idx_rr_entry    (entry_id),
+  INDEX idx_rr_manager  (manager_id),
+  INDEX idx_rr_employee (employee_id),
+  CONSTRAINT fk_rr_entry
+    FOREIGN KEY (entry_id) REFERENCES inventory_float_entries(id)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_rr_manager
+    FOREIGN KEY (manager_id) REFERENCES users(id)
+      ON DELETE SET NULL,
+  CONSTRAINT fk_rr_employee
+    FOREIGN KEY (employee_id) REFERENCES users(id)
+      ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Notifications (tickets)
 CREATE TABLE tickets (
-  id           SERIAL PRIMARY KEY,
-  client_id    INT NOT NULL REFERENCES clients(id),
-  type         VARCHAR NOT NULL,   -- invalid_data, restock, report
-  reference_id INT NOT NULL,       -- link to related record
-  status       VARCHAR NOT NULL,   -- open, resolved
-  created_at   TIMESTAMP NOT NULL DEFAULT now()
-);
+  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_id    INT UNSIGNED NOT NULL,
+  type         VARCHAR(50)    NOT NULL,  -- e.g. 'invalid_data','restock','report'
+  reference_id INT            NOT NULL,  -- FK to related record (no enforced FK here)
+  status       VARCHAR(50)    NOT NULL,  -- 'open','resolved'
+  description  VARCHAR(255)   NOT NULL,
+  created_at   TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- daily management reports
-DROP TABLE IF EXISTS reports CASCADE;
+  PRIMARY KEY (id),
+  INDEX idx_tickets_client (client_id),
+  CONSTRAINT fk_tickets_client
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Daily management reports
 CREATE TABLE reports (
-  id            SERIAL PRIMARY KEY,
-  client_id     INT NOT NULL REFERENCES clients(id),
-  report_date   DATE NOT NULL,
-  variance_flag BOOLEAN NOT NULL DEFAULT false,
-  generated_at  TIMESTAMP NOT NULL DEFAULT now(),
-  manager_id    INT NOT NULL REFERENCES users(id),
-  UNIQUE (client_id, report_date)
-);
+  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_id     INT UNSIGNED NOT NULL,
+  report_date   DATE            NOT NULL,
+  variance_flag BOOLEAN         NOT NULL DEFAULT FALSE,
+  generated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  manager_id    INT UNSIGNED    NOT NULL,
 
--- API keys so POS talks to us
-DROP TABLE IF EXISTS api_keys CASCADE;
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_reports_client_date (client_id, report_date),
+  INDEX idx_reports_manager        (manager_id),
+  CONSTRAINT fk_reports_client
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_reports_manager
+    FOREIGN KEY (manager_id) REFERENCES users(id)
+      ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- API keys
 CREATE TABLE api_keys (
-  id          SERIAL PRIMARY KEY,
-  client_id   INT NOT NULL REFERENCES clients(id),
-  key         VARCHAR UNIQUE NOT NULL,
-  created_at  TIMESTAMP NOT NULL DEFAULT now()
-);
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_id   INT UNSIGNED NOT NULL,
+  api_key     VARCHAR(255)   NOT NULL,
+  created_at  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- finalized snapshots for history
-DROP TABLE IF EXISTS inventory_snapshots CASCADE;
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_api_keys_key (api_key),
+  INDEX idx_api_keys_client  (client_id),
+  CONSTRAINT fk_apikeys_client
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Finalized daily snapshots
 CREATE TABLE inventory_snapshots (
-  id            SERIAL PRIMARY KEY,
-  float_id      INT NOT NULL REFERENCES inventory_floats(id),
-  snapshot_date DATE NOT NULL,
-  created_at    TIMESTAMP NOT NULL DEFAULT now()
-);
-CREATE INDEX idx_snapshot_date ON inventory_snapshots(snapshot_date);
+  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  float_id      INT UNSIGNED NOT NULL,
+  snapshot_date DATE            NOT NULL,
+  created_at    TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- snapshot entries detail
-DROP TABLE IF EXISTS inventory_snapshot_entries CASCADE;
+  PRIMARY KEY (id),
+  INDEX idx_snapshots_float   (float_id),
+  INDEX idx_snapshot_date     (snapshot_date),
+  CONSTRAINT fk_snapshots_float
+    FOREIGN KEY (float_id) REFERENCES inventory_floats(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Snapshot entries
 CREATE TABLE inventory_snapshot_entries (
-  id            SERIAL PRIMARY KEY,
-  snapshot_id   INT NOT NULL REFERENCES inventory_snapshots(id),
-  item_id       INT NOT NULL REFERENCES items(id),
-  recorded_qty  INT NOT NULL
-);
+  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  snapshot_id   INT UNSIGNED NOT NULL,
+  item_id       INT UNSIGNED NOT NULL,
+  recorded_qty  INT           NOT NULL,
 
--- ------------------------------------------------
--- SUPPORTING FUNCTIONS
--- ------------------------------------------------
+  PRIMARY KEY (id),
+  INDEX idx_sne_snapshot (snapshot_id),
+  INDEX idx_sne_item     (item_id),
+  CONSTRAINT fk_sne_snapshot
+    FOREIGN KEY (snapshot_id) REFERENCES inventory_snapshots(id)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_sne_item
+    FOREIGN KEY (item_id) REFERENCES items(id)
+      ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- convert float to snapshot, plpgsql version
-CREATE OR REPLACE FUNCTION convert_float_to_snapshot(p_float_id INT, p_manager_id INT)
-RETURNS VOID LANGUAGE plpgsql AS $$
-DECLARE
-  v_snapshot_id INT;
-  rec RECORD;
-BEGIN
-  -- lock the float row
-  SELECT id INTO rec FROM inventory_floats
-    WHERE id = p_float_id AND status = 'open'
-    FOR UPDATE;
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'float % not found or already finalized', p_float_id;
-  END IF;
 
-  -- insert snapshot header
-  INSERT INTO inventory_snapshots(float_id, snapshot_date, created_at)
-  SELECT id, float_date, now() FROM inventory_floats WHERE id = p_float_id
-  RETURNING id INTO v_snapshot_id;
-
-  -- copy approved entries
-  INSERT INTO inventory_snapshot_entries(snapshot_id, item_id, recorded_qty)
-  SELECT
-    v_snapshot_id,
-    ife.item_id,
-    COALESCE(ife.approved_qty, ife.reported_qty)
-  FROM inventory_float_entries AS ife
-  WHERE ife.float_id = p_float_id AND ife.approved = TRUE;
-
-  -- mark float done
-  UPDATE inventory_floats SET status = 'finalized' WHERE id = p_float_id;
-END;
-$$;
-
--- ------------------------------------------------
--- DUMMY DATA
--- ------------------------------------------------
-
--- two clients
-INSERT INTO clients(name, domain) VALUES
-  ('Acme Store', 'acme.example.com'),
-  ('Beta Mart', 'beta.example.com');
-
--- two users: manager and employee for Acme
-INSERT INTO users(client_id, name, email, password_hash, role) VALUES
-  (1, 'Alice Manager', 'alice@acme.com', 'hashed_pwd_mgr', 'owner'),  -- mgr login
-  (1, 'Bob Cashier',   'bob@acme.com',   'hashed_pwd_emp', 'employee');
-
--- some items
-INSERT INTO items(client_id, sku, name, threshold_qty, current_qty) VALUES
-  (1, 'A100', 'Apple',    10, 50),
-  (1, 'B200', 'Banana',   20, 30);
-
--- create an open float for today
-INSERT INTO inventory_floats(client_id, float_date, status) VALUES
-  (1, CURRENT_DATE, 'open');
-
--- entries for that float (id = 1)
-INSERT INTO inventory_float_entries(float_id, item_id, reported_qty) VALUES
-  (1, 1, 48),  -- Alice will approve these later
-  (1, 2, 28);
-
--- manager approves entries
-UPDATE inventory_float_entries
-SET approved = TRUE, approved_qty = reported_qty, manager_id = 1, approved_at = now()
-WHERE float_id = 1;
-
--- extra approved dummy entries
-INSERT INTO inventory_float_entries (float_id, item_id, reported_qty, approved, approved_qty, manager_id, approved_at)
-VALUES
-  (1, 1, 65, TRUE, 65, 1, now()),
-  (1, 2, 12, TRUE, 12, 1, now());
-
--- restock request for Banana since reported_qty < threshold
-INSERT INTO restock_requests(entry_id, requested_qty, status, manager_id, employee_id)
-VALUES (2, 10, 'pending', 1, 2);
-
--- ticket for restock
-INSERT INTO tickets(client_id, type, reference_id, status) VALUES
-  (1, 'restock', 1, 'open');
-
--- daily report
-INSERT INTO reports(client_id, report_date, variance_flag, manager_id)
-VALUES (1, CURRENT_DATE, TRUE, 1);
-
--- API key for Acme
-INSERT INTO api_keys(client_id, key) VALUES
-  (1, 'abcdef123456');
-
--- convert the float to a snapshot
-SELECT convert_float_to_snapshot(1, 1);
-
--- extra dummy inventory entries for more testing
-INSERT INTO inventory_float_entries(float_id, item_id, reported_qty, approved, approved_qty, manager_id, approved_at)
-VALUES
-  (1, 1, 75, TRUE, 75, 1, now()), -- apple overflow test
-  (1, 2, 0, TRUE,  0, 1, now()), -- out of banana
-  (1, 1, 5, TRUE,   5, 1, now()), -- low apple again
-  (1, 2, 22, TRUE,  22, 1, now()); -- banana normal re-count
-
--- corresponding restock tickets for new entries
-INSERT INTO restock_requests(entry_id, requested_qty, status, manager_id, employee_id, requested_at)
-VALUES
-  (LASTVAL()-3, 5, 'pending', 1, 2, now()), -- for apple low
-  (LASTVAL()-1, 10, 'pending', 1, 2, now());
-
--- done adding more data
--- verify updated entries
-SELECT * FROM inventory_float_entries WHERE float_id = 1;
--- verify restock requests
-SELECT * FROM restock_requests;
-
--- verify snapshot entries again after conversion if needed
-SELECT * FROM inventory_snapshot_entries;
-
--- verify snapshot list
-SELECT * FROM inventory_snapshots;

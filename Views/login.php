@@ -1,9 +1,8 @@
 <?php include('Views/_partials/header.php'); ?>
 
 <?php 
-require "Vendor/autoload.php";
+require "vendor/autoload.php";
 $client = new Google\Client;
-$dir = __DIR__;
 
 $client->setAuthConfig( 'credentials.json');
 
@@ -13,24 +12,6 @@ $client->addScope("profile");
 $url = $client->createAuthUrl();
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <div class=" w-full h-screen ">
 
@@ -54,11 +35,11 @@ $url = $client->createAuthUrl();
                     <h2 class="text-2xl font-bold text-center text-gray-800">Welcome Back</h2>
                     <div>
                         <label for="loginEmail" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="loginEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="email" id="loginEmail"   name="loginEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" id="loginPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" id="loginPassword" name="loginPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
@@ -81,19 +62,19 @@ $url = $client->createAuthUrl();
                     <h2 class="text-2xl font-bold text-center text-gray-800">Create Account</h2>
                     <div>
                         <label for="signupName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" id="signupName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" id="signupName" name="signupName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label for="signupEmail" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="signupEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="email" id="signupEmail" name="signupEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label for="signupPassword" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" id="signupPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" id="signupPassword" name="signupPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                        <input type="password" id="confirmPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="flex items-center">
                         <input id="terms" name="terms" type="checkbox" required class="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded">
@@ -118,16 +99,13 @@ $url = $client->createAuthUrl();
                             <span class="px-2 bg-white text-gray-500">Or continue with</span>
                         </div>
                     </div>
-                    <div class="mt-6 grid grid-cols-2 gap-3">
+                    <div class="mt-6 grid grid-cols-1 gap-3">
                         <a href="<?= $url ?>">
                             <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 <img class="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo">
                             </button>  
                         </a>
-                        
-                        <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            <img class="h-5 w-5" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROtT2Um38jtuqcDEmCfCx3tEqzORl-PCvxarTPD9jZlFvd9djCM7Gl36bGA4X-JBaMEmk&usqp=CAU" alt="GitHub">
-                        </button>
+
                     </div>
                 </div>
             </div>
@@ -136,62 +114,86 @@ $url = $client->createAuthUrl();
 </div>
 </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginTab = document.getElementById('loginTab');
-            const signupTab = document.getElementById('signupTab');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
+       document.addEventListener('DOMContentLoaded', () => {
+        // Forms & tabs
+        const loginTab     = document.getElementById('loginTab');
+        const signupTab    = document.getElementById('signupTab');
+        const loginForm    = document.getElementById('loginForm');
+        const signupForm   = document.getElementById('signupForm');
 
-            // Switch to Signup form
-            signupTab.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-                loginTab.classList.remove('bg-blue-500', 'text-white');
-                loginTab.classList.add('bg-white', 'border', 'border-blue-500', 'text-blue-500');
-                signupTab.classList.remove('bg-white', 'border', 'border-blue-500', 'text-blue-500');
-                signupTab.classList.add('bg-blue-500', 'text-white');
-            });
+        // Set form actions to point at home controller
+        loginForm.action  = '?action=login';
+        loginForm.method  = 'POST';
+        signupForm.action = '?action=signup';
+        signupForm.method = 'POST';
 
-            // Switch to Login form
-            loginTab.addEventListener('click', function(e) {
-                e.preventDefault();
-                signupForm.classList.add('hidden');
-                loginForm.classList.remove('hidden');
-                signupTab.classList.remove('bg-blue-500', 'text-white');
-                signupTab.classList.add('bg-white', 'border', 'border-blue-500', 'text-blue-500');
-                loginTab.classList.remove('bg-white', 'border', 'border-blue-500', 'text-blue-500');
-                loginTab.classList.add('bg-blue-500', 'text-white');
-            });
-
-            // Handle Login form submission
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                // Here you would typically send this data to your server
-                console.log('Login attempt with:', { email, password });
-                alert('Login functionality would be implemented here');
-            });
-
-            // Handle Signup form submission
-            signupForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const name = document.getElementById('signupName').value;
-                const email = document.getElementById('signupEmail').value;
-                const password = document.getElementById('signupPassword').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                
-                if (password !== confirmPassword) {
-                    alert('Passwords do not match!');
-                    return;
-                }
-                
-                // Here you would typically send this data to your server
-                console.log('Signup attempt with:', { name, email, password });
-                alert('Account creation would be implemented here');
-            });
+        // Toggle views
+        signupTab.addEventListener('click', e => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            loginTab.classList.replace('bg-blue-500', 'bg-white');
+            loginTab.classList.replace('text-white', 'text-blue-500');
+            signupTab.classList.replace('bg-white', 'bg-blue-500');
+            signupTab.classList.replace('text-blue-500', 'text-white');
         });
+        loginTab.addEventListener('click', e => {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            signupTab.classList.replace('bg-blue-500', 'bg-white');
+            signupTab.classList.replace('text-white', 'text-blue-500');
+            loginTab.classList.replace('bg-white', 'bg-blue-500');
+            loginTab.classList.replace('text-blue-500', 'text-white');
+        });
+
+        // email regex
+        const validEmail = email => /\S+@\S+\.\S+/.test(email);
+
+        // Handle login submit
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const email    = loginForm.loginEmail.value.trim();
+            const password = loginForm.loginPassword.value;
+
+            if (!validEmail(email)) {
+            return alert('Please enter a valid email address.');
+            }
+            if (password.length < 6) {
+            return alert('Password must be at least 6 characters.');
+            }
+
+            loginForm.submit();
+        });
+
+        // Handle signup submit
+        signupForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const name            = signupForm.signupName.value.trim();
+            const email           = signupForm.signupEmail.value.trim();
+            const password        = signupForm.signupPassword.value;
+            const confirmPassword = signupForm.confirmPassword.value;
+            const termsAccepted   = signupForm.terms.checked;
+
+            if (name.length < 2) {
+            return alert('Please enter your full name.');
+            }
+            if (!validEmail(email)) {
+            return alert('Please enter a valid email address.');
+            }
+            if (password.length < 6) {
+            return alert('Password must be at least 6 characters.');
+            }
+            if (password !== confirmPassword) {
+            return alert('Passwords do not match.');
+            }
+            if (!termsAccepted) {
+            return alert('You must agree to the Terms and Conditions.');
+            }
+
+            signupForm.submit();
+        });
+        });
+
     </script>
 <?php include('Views/_partials/fullFooter.php'); ?>

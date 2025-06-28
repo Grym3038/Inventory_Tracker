@@ -36,6 +36,7 @@ session_set_cookie_params($lifetime, '/');
 session_start();
 
 
+
 function filter_string_polyfill(string $string): string
 {
     $str = preg_replace('/\x00|<[^>]*>?/', '', $string);
@@ -44,10 +45,14 @@ function filter_string_polyfill(string $string): string
 
 // Get the action
 $action = filter_string_polyfill(isset($_GET['action']) ? (string)$_GET['action'] : 'home');
-
-
+//require models
+require('Models/User.php');
+require('Models/Database.php');
 // Register the controllers
 require('Controllers/HomeController.php');
+
+
+
 
 
 // return404();

@@ -4,6 +4,7 @@
  * Purpose: To view home page and any other actions
  */
 
+use Models\User;
 switch ($action)
 {
         /**
@@ -21,8 +22,92 @@ switch ($action)
         case 'about':
                 include('Views/About.php');
                 exit();
-        case 'login':
+        case 'loginForm':
                 include('Views/login.php');
+                exit();
+        case 'login':
+                // Sanitize inputs
+                $email    = filter_input(INPUT_POST, 'loginEmail', FILTER_SANITIZE_EMAIL);
+                $password = $_POST['loginPassword'] ?? '';
+
+                $errors = [];
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $errors[] = 'Invalid email address.';
+                }
+                if (strlen($password) < 6) {
+                        $errors[] = 'Password must be at least 6 characters.';
+                }
+
+                if ($errors) {
+                        $_SESSION['errors'] = $errors;
+                        include('Views/error.php');
+                        exit;
+                }
+
+                // Authenticate
+                $user = User::findByEmail($email);
+                if (!$user || !password_verify($password, $user->password_hash)) {
+                        $_SESSION['errors'] = ['Email or password incorrect.'];
+                        include('Views/login.php');
+                        exit;
+                }
+
+                // Success
+                $_SESSION["name"] = $user->name;
+                $_SESSION['user_id'] = $user->id;
+                include('Views/dashboard.php');
+                exit();
+        case 'signup':
+                // Sanitize inputs
+                $name            = trim($_POST['signupName'] ?? '');
+                $email           = filter_input(INPUT_POST, 'signupEmail', FILTER_SANITIZE_EMAIL);
+                $password        = $_POST['signupPassword'] ?? '';
+                $confirmPassword = $_POST['confirmPassword'] ?? '';
+                $termsAccepted   = isset($_POST['terms']);
+
+                $errors = [];
+                if (strlen($name) < 2) {
+                $errors[] = 'Name must be at least 2 characters.';
+                }
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = 'Invalid email address.';
+                }
+                if (strlen($password) < 6) {
+                $errors[] = 'Password must be at least 6 characters.';
+                }
+                if ($password !== $confirmPassword) {
+                $errors[] = 'Passwords do not match.';
+                }
+                if (!$termsAccepted) {
+                $errors[] = 'Terms must be accepted.';
+                }
+
+                if ($errors) {
+                $_SESSION['errors'] = $errors;
+                $title= 'error';
+                $body = ' ';
+                foreach($errors as $error){
+                        $body = $body . $error;
+                }
+                include('Views/error.php');
+                exit;
+                }
+
+                // Create user
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $user = new User();
+
+                $user->name          = $name;
+                $user->email         = $email;
+                $user->password_hash = $hash;
+                // Set client_id to a valid existing client, e.g. from session or default
+                $user->client_id     = $_SESSION['client_id'] ?? 1;
+                $user->save();
+
+                // Success
+                $_SESSION["name"] = $user->name;
+                $_SESSION['user_id'] = $user->id;
+                include('Views/dashboard.php');
                 exit();
         case 'items':
                 include('Views/items.php');

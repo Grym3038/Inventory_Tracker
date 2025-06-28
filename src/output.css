@@ -1067,6 +1067,12 @@
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
+  .mt-\[-10rem\] {
+    margin-top: -10rem;
+  }
+  .mt-\[-20rem\] {
+    margin-top: -20rem;
+  }
   .apexcharts-canvas {
     & .apexcharts-tooltip {
       background-color: white !important;
@@ -1495,6 +1501,12 @@
   .h-\[0\.58em\] {
     height: 0.58em;
   }
+  .h-\[0rem\] {
+    height: 0rem;
+  }
+  .h-\[5\] {
+    height: 5;
+  }
   .h-\[10rem\] {
     height: 10rem;
   }
@@ -1507,8 +1519,26 @@
   .h-\[40rem\] {
     height: 40rem;
   }
+  .h-\[45rem\] {
+    height: 45rem;
+  }
   .h-\[50rem\] {
     height: 50rem;
+  }
+  .h-\[52rem\] {
+    height: 52rem;
+  }
+  .h-\[53rem\] {
+    height: 53rem;
+  }
+  .h-\[54rem\] {
+    height: 54rem;
+  }
+  .h-\[55rem\] {
+    height: 55rem;
+  }
+  .h-\[60rem\] {
+    height: 60rem;
   }
   .h-\[80\%\] {
     height: 80%;
@@ -1518,6 +1548,9 @@
   }
   .h-\[calc\(100\%-1rem\)\] {
     height: calc(100% - 1rem);
+  }
+  .h-\[screen\] {
+    height: screen;
   }
   .h-dvh {
     height: 100dvh;
@@ -1828,6 +1861,9 @@
   .resize {
     resize: both;
   }
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1842,6 +1878,9 @@
   }
   .flex-col-reverse {
     flex-direction: column-reverse;
+  }
+  .flex-row {
+    flex-direction: row;
   }
   .items-center {
     align-items: center;
@@ -2456,6 +2495,9 @@
   }
   .pt-16 {
     padding-top: calc(var(--spacing) * 16);
+  }
+  .pt-\[-20rem\] {
+    padding-top: -20rem;
   }
   .search-filtering-row {
     .datatable-wrapper .datatable-container thead tr& th {
@@ -3218,6 +3260,16 @@
       display: none;
     }
   }
+  .lg\:h-\[45rem\] {
+    @media (width >= 64rem) {
+      height: 45rem;
+    }
+  }
+  .lg\:h-\[50rem\] {
+    @media (width >= 64rem) {
+      height: 50rem;
+    }
+  }
   .lg\:w-\[3rem\] {
     @media (width >= 64rem) {
       width: 3rem;
@@ -3363,6 +3415,11 @@
   .xl\:inline {
     @media (width >= 80rem) {
       display: inline;
+    }
+  }
+  .xl\:h-\[50rem\] {
+    @media (width >= 80rem) {
+      height: 50rem;
     }
   }
   .xl\:max-w-\[70\%\] {
