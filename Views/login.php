@@ -1,4 +1,34 @@
 <?php include('Views/_partials/header.php'); ?>
+
+<?php 
+require __DIR__ . "/vendor/autoload.php";
+$client = new Google\Client;
+
+$client->setClientId();
+$client->setClientSecret();
+$client->setRedirectUri();
+
+
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class=" w-full h-screen ">
 
 
