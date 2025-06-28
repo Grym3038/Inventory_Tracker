@@ -1,13 +1,16 @@
 <?php include('Views/_partials/header.php'); ?>
 
 <?php 
-require __DIR__ . "/vendor/autoload.php";
+require "Vendor/autoload.php";
 $client = new Google\Client;
+$dir = __DIR__;
 
-$client->setClientId();
-$client->setClientSecret();
-$client->setRedirectUri();
+$client->setAuthConfig( 'credentials.json');
 
+$client->addScope("email");
+$client->addScope("profile");
+
+$url = $client->createAuthUrl();
 
 ?>
 
@@ -43,6 +46,7 @@ $client->setRedirectUri();
                     <button id="signupTab" class="px-6 py-2 font-medium text-blue-500 bg-white border border-blue-500 rounded-r-lg focus:outline-none">
                         Sign Up
                     </button>
+
                 </div>
 
                 <!-- Login Form -->
@@ -115,9 +119,12 @@ $client->setRedirectUri();
                         </div>
                     </div>
                     <div class="mt-6 grid grid-cols-2 gap-3">
-                        <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            <img class="h-5 w-5" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROtT2Um38jtuqcDEmCfCx3tEqzORl-PCvxarTPD9jZlFvd9djCM7Gl36bGA4X-JBaMEmk&usqp=CAU" alt="Google">
-                        </button>
+                        <a href="<?= $url ?>">
+                            <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <img class="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo">
+                            </button>  
+                        </a>
+                        
                         <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <img class="h-5 w-5" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROtT2Um38jtuqcDEmCfCx3tEqzORl-PCvxarTPD9jZlFvd9djCM7Gl36bGA4X-JBaMEmk&usqp=CAU" alt="GitHub">
                         </button>
@@ -187,4 +194,4 @@ $client->setRedirectUri();
             });
         });
     </script>
-<?php include('Views/_partials/footer.php'); ?>
+<?php include('Views/_partials/fullFooter.php'); ?>

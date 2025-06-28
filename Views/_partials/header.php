@@ -38,10 +38,10 @@
 
                 <!-- Call-to-Action Button -->
                 <div class="hidden md:flex justify-around w-[20rem] lg:w-[30%]">
-                    <a href="tel:16059371183" class="bg-gray-200 border-1 border-gray-300 hover:bg-[#003980] font-bold text-gray-700 py-2 px-6 rounded-full text-md lg:text-md transition-all">
+                    <a href="?action=login" class="bg-gray-200 border-1 border-gray-300 hover:bg-[#003980] font-bold text-gray-700 py-2 px-6 rounded-full text-md lg:text-md transition-all">
                         Login
                     </a>
-                    <a href="tel:16059371183" class="bg-[#0078FF] border-1 border-blue-800 hover:bg-[#003980] font-bold text-white py-2 px-6 rounded-full text-md lg:text-md transition-all">
+                    <a href="?action=login" class="bg-[#0078FF] border-1 border-blue-800 hover:bg-[#003980] font-bold text-white py-2 px-6 rounded-full text-md lg:text-md transition-all">
                         Start Free Trial
                     </a>
                 </div>
@@ -66,10 +66,10 @@
                         Start Free Trial
                     </a>
                 </div>
-                <a href="#" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Home</a>
-                <a href="#services" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Services</a>
-                <a href="#about" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">About Us</a>
-                <a href="#contact" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Contact</a>
+                <a href="." class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Home</a>
+                <a href="?action=pricing" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Pricing</a>
+                <a href="?action=About" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">About Us</a>
+                <a href="?action=Contact" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Contact</a>
 
             </div>
         </div>

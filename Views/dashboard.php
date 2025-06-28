@@ -16,7 +16,7 @@
                     </div>
                     <div class="user-profile">
                         <div class="user-avatar">AD</div>
-                        <span>Admin User</span>
+                        <span><?= $_SESSION["name"] ?></span>
                         <i class="fas fa-chevron-down" style="margin-left: 10px;"></i>
                     </div>
                 </div>

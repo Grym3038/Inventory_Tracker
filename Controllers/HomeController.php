@@ -21,10 +21,14 @@ switch ($action)
         case 'about':
                 include('Views/About.php');
                 exit();
-        case 'log_in':
+        case 'login':
                 include('Views/login.php');
                 exit();
         case 'items':
                 include('Views/items.php');
                 exit();
+        case 'redirect':
+                include('Views/redirect.php');
+                exit();
+
 }
