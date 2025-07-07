@@ -30,8 +30,8 @@ if (isset($_SESSION['user_id'])) {
 switch ($action)
 {
         case 'error':
-                $title = '404';
-                $body = 'That page does not exist.';
+                $title = 'error';
+                $body =  $_SESSION['errors'][0];
                 include('Views/error.php');
                 exit();
 
@@ -48,8 +48,20 @@ switch ($action)
                 exit();
         case 'loginForm':
                 if (isset($_SESSION['user_id'])){
-                include('Views/dashboard.php');
-                exit();
+                        if(isset($_SESSION['role']) && $_SESSION['role'] === 'employee'){
+                                header('Location: index.php?action=employeeDashboard');
+                                exit();
+                        }
+                        elseif(isset($_SESSION['role']) && $_SESSION['role'] === 'owner'){
+                                header('Location: index.php?action=ownerDashboard');
+                                exit();
+                        }
+                        elseif(isset($_SESSION['role']) && $_SESSION['role'] === 'admin'){
+                                header('Location: index.php?action=adminDashboard');
+                                exit();
+                        }
+                 
+                 
                 }
                 include('Views/login.php');
                 exit();
@@ -114,9 +126,23 @@ switch ($action)
                         $params['secure'],
                         $params['httponly']
                 );
-                }  
-                include('Views/dashboard.php');
-                exit();
+                }
+                        if($_SESSION['role'] === 'employee'){
+                                header('Location: index.php?action=employeeDashboard');
+                                exit();
+                        }
+                        elseif( $_SESSION['role'] === 'owner'){
+                                header('Location: index.php?action=ownerDashboard');
+                                exit();
+                        }
+                        elseif( $_SESSION['role'] === 'admin'){
+                                header('Location: index.php?action=adminDashboard');
+                                exit();
+                        } else {
+                                $_SESSION['errors'] = ['An error occured. Please try again'];
+                                header('Location: index.php?action=error');
+                                exit();
+                        }
         case 'signup':
 
 
@@ -126,6 +152,7 @@ switch ($action)
                 $password        = $_POST['signupPassword'] ?? '';
                 $confirmPassword = $_POST['confirmPassword'] ?? '';
                 $termsAccepted   = isset($_POST['terms']);
+                $role            = 'employee';
 
                 $errors = [];
                 if (strlen($name) < 2) {
@@ -159,19 +186,20 @@ switch ($action)
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $user = new User();
 
-                $user->name          = $name;
-                $user->email         = $email;
-                $user->password_hash = $hash;
-                $user->role = 'employee';
+                $user->name             = $name;
+                $user->email            = $email;
+                $user->password_hash    = $hash;
+                $user->role             = 'employee' ;
                 // Set client_id to a valid existing client, e.g. from session or default
-                $user->client_id     = $_SESSION['client_id'] ?? 1;
+                $user->client_id        = $_SESSION['client_id'] ?? 1;
                 $user->save();
 
                 // Success
-                $_SESSION["name"] = $user->name;
-                $_SESSION['user_id'] = $user->id;
-                $_SESSION['role'] = 'employee';
-                include('Views/dashboard.php');
+                $_SESSION["name"]       = $user->name;
+                $_SESSION['user_id']    = $user->id;
+                $_SESSION['role']       = $role ;
+                
+                header('Location: ?action=employeeDashboard');
                 exit();
         case 'logout':
    

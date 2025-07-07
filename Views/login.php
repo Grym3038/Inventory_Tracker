@@ -192,6 +192,7 @@ $url = $client->createAuthUrl();
             }
 
             signupForm.submit();
+            
         });
         });
 

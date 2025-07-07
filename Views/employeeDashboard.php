@@ -2,7 +2,7 @@
 
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content ">
             <!-- Header -->
             <div class="header">
                 <div class="search-bar">
@@ -15,7 +15,13 @@
                         <span class="notification-badge">3</span>
                     </div>
                     <div class="user-profile">
-                        <div class="user-avatar">AD</div>
+                        <div class="user-avatar"><?php
+                        // Split the full name on spaces/hyphens, take each first letter, uppercase it, then join
+                        echo implode('', array_map(
+                            fn($part) => mb_strtoupper(mb_substr($part, 0, 1)),
+                            preg_split('/[\s\-]+/', $_SESSION['name'] ?? '')
+                        ));
+                        ?></div>
                         <span><?= $_SESSION["name"] ?></span>
                         <i class="fas fa-chevron-down" style="margin-left: 10px;"></i>
                     </div>
@@ -27,40 +33,20 @@
                 <div class="stat-card">
                     <div class="stat-card-header">
                         <div>
-                            <div class="stat-value">1,248</div>
-                            <div class="stat-label">Total Users</div>
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Total Tickets</div>
                         </div>
                         <div class="stat-icon users">
                             <i class="fas fa-users"></i>
                         </div>
                     </div>
                 </div>
+                
+                
                 <div class="stat-card">
                     <div class="stat-card-header">
                         <div>
-                            <div class="stat-value">342</div>
-                            <div class="stat-label">Active Sessions</div>
-                        </div>
-                        <div class="stat-icon sessions">
-                            <i class="fas fa-signal"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div>
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label">System Health</div>
-                        </div>
-                        <div class="stat-icon health">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div>
-                            <div class="stat-value">5</div>
+                            <div class="stat-value">2</div>
                             <div class="stat-label">Recent Alerts</div>
                         </div>
                         <div class="stat-icon alerts">

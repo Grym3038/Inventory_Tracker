@@ -23,29 +23,38 @@
 </head>
 
 <body>
-    <div class="dashboard">
+    <div class="dashboard ">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>Adiman</h2>
+                <h2><?= $_SESSION["name"] ?></h2>
             </div>
             <div class="sidebar-menu">
                 <div class="menu-item active">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </div>
+                <?php
+                    if($user->role === 'admin'):
+                ?>
                 <div class="menu-item">
                     <i class="fas fa-chart-line"></i>
                     <a href="?action=home" class="">Analytics</a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <a href="?action=users" class="">User Management</a>
-                </div>
-                <div class="menu-item">
                     <i class="fas fa-file-alt"></i>
                     <a href="?action=items" class="">Content</a>
                 </div>
+                <?php
+                    elseif($user->role === 'admin'):
+                ?>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <a href="?action=users" class="">User Management</a>
+                </div>
+                <?php
+                    endif;
+                ?>
                 <div class="menu-item">
                     <i class="fas fa-cog"></i>
                     <a href="?action=log_in" class="">Settings</a>
@@ -54,6 +63,10 @@
                     <i class="fas fa-question-circle"></i>
                     <a href="?action=about" class="">Help</a>
                 </div>
+            </div>
+            <div class="sidebar-footer ">
+                <i class="fas fa-question-circle"></i>
+                <a href="?action=logout " class="text-red-700 hover:text-red-950 font-bold">Logout</a>
             </div>
         </div>
     

@@ -33,6 +33,9 @@
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
         }
 
         .sidebar-header {
@@ -49,8 +52,10 @@
         }
 
         .sidebar-menu {
+            height: 100%;
             padding: 20px 0;
         }
+
 
         .menu-item {
             padding: 12px 20px;
@@ -77,10 +82,25 @@
             text-align: center;
         }
 
+        .sidebar-footer{
+            
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         /* Main Content Styles */
         .main-content {
             flex: 1;
             padding: 20px;
+            height: 100vh;
+            overflow: scroll;
+            overflow-x: hidden;
         }
 
         /* Header Styles */

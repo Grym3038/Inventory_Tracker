@@ -10,8 +10,8 @@ VALUES
 -- -------------------------------------------------------------------
 INSERT INTO users (id, client_id, name, email, password_hash, role, created_at)
 VALUES
-  (1, 1, 'Alice Manager', 'alice@demo-tenant.local',
-     '$2y$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'owner', NOW()),
+  (1, 1, 'ADMIN', 'Admin@email.com',
+     '$2y$10$KC5zrfX7wmI5qkQ.Vdg7Ye0KhKUsj5L4vJNpZnDp2l9s61CjmPTAu', 'admin', NOW()),
   (2, 1, 'Bob Employee', 'bob@demo-tenant.local',
      '$2y$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'employee', NOW());
 

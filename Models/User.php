@@ -49,7 +49,7 @@ class User
         if (!empty($this->id)) {
             $sql = 'UPDATE users SET name = :name, email = :email, password_hash = :hash, client_id = :client_id, role = :role WHERE id = :id';
         } else {
-            $sql = 'INSERT INTO users (name, email, password_hash, client_id, role) VALUES (:name, :email, :hash, :client_id, role)';
+            $sql = 'INSERT INTO users (name, email, password_hash, client_id, role) VALUES (:name, :email, :hash, :client_id, :role)';
         }
 
         $stmt = $db->prepare($sql);
