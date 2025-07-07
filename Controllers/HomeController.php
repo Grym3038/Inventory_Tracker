@@ -29,6 +29,12 @@ if (isset($_SESSION['user_id'])) {
 
 switch ($action)
 {
+        case 'error':
+                $title = '404';
+                $body = 'That page does not exist.';
+                include('Views/error.php');
+                exit();
+
         /**
          * List all albums
          */
@@ -52,7 +58,12 @@ switch ($action)
                 session_regenerate_id(true);
 
 
-                $remember = isset($_POST['remember-me']);
+               
+              
+                // Sanitize inputs
+                $email    = filter_input(INPUT_POST, 'loginEmail', FILTER_SANITIZE_EMAIL);
+                $password = filter_input(INPUT_POST, 'loginPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
+                $remember = filter_input(INPUT_POST, 'remember-me', FILTER_VALIDATE_BOOLEAN, ['options' => ['default' => false]]);
 
                 if ($remember) {
                         // 30 days
@@ -61,21 +72,6 @@ switch ($action)
                         // default (e.g. browser session)
                         $lifetime = 0;
                 }
-              
-
-                if (session_status() !== PHP_SESSION_ACTIVE) {
-                session_start();
-                }
-
-
-
-                // Start session if not already
-                if (session_status() !== PHP_SESSION_ACTIVE) {
-                        session_start();
-                }
-                // Sanitize inputs
-                $email    = filter_input(INPUT_POST, 'loginEmail', FILTER_SANITIZE_EMAIL);
-                $password = $_POST['loginPassword'] ?? '';
 
                 $errors = [];
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -122,10 +118,7 @@ switch ($action)
                 include('Views/dashboard.php');
                 exit();
         case 'signup':
-                // Start session if not already
-                if (session_status() !== PHP_SESSION_ACTIVE) {
-                        session_start();
-                }
+
 
                 // Sanitize inputs
                 $name            = trim($_POST['signupName'] ?? '');
@@ -181,10 +174,7 @@ switch ($action)
                 include('Views/dashboard.php');
                 exit();
         case 'logout':
-                // Start session if not already
-                if (session_status() !== PHP_SESSION_ACTIVE) {
-                        session_start();
-                }
+   
                 // Clear session data
                 $_SESSION = [];
                 // Invalidate session cookie

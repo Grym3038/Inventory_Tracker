@@ -30,10 +30,7 @@ function return500()
     exit();
 }
 
-// Start the session
-$lifetime = 60 * 60 * 24 * 365; // 1 year in seconds
-session_set_cookie_params($lifetime, '/');
-session_start();
+
 
 
 
