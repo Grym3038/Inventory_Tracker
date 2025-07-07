@@ -12,19 +12,12 @@ INSERT INTO users (id, client_id, name, email, password_hash, role, created_at)
 VALUES
   (1, 1, 'ADMIN', 'Admin@email.com',
      '$2y$10$KC5zrfX7wmI5qkQ.Vdg7Ye0KhKUsj5L4vJNpZnDp2l9s61CjmPTAu', 'admin', NOW()),
-  (2, 1, 'Bob Employee', 'bob@demo-tenant.local',
-     '$2y$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'employee', NOW());
+  (2, 1, 'Owner Test', 'Owner@email.com',
+     '$2y$10$dKNt6dtEL1ADW6rgacIHL.GyopCxpaZFr0rPymqdAxhRLTCQDzASy', 'owner', NOW());
+  (3, 1, 'Employee Test', 'employee@email.com',
+     '$2y$10$Rcw1N6wQAhYgzE2CLhhm/elZ3.ucBvE3rCmHdUM1BZ8/8u06E4pbO', 'employee', NOW());
 
--- -------------------------------------------------------------------
--- 3) One OAuth token for Alice (as if she logged in via Google)
--- -------------------------------------------------------------------
-INSERT INTO oauth_tokens (id, user_id, provider, access_token, refresh_token, expires_at, created_at)
-VALUES
-  (1, 1, 'google',
-   'ya29.a0ARrdaM-ExampleAccessToken1234567890',
-   '1//0gExampleRefreshTokenABCDEFGHIJKLMN', 
-   DATE_ADD(NOW(), INTERVAL 1 HOUR),
-   NOW());
+
 
 -- -------------------------------------------------------------------
 -- 4) Two inventory items

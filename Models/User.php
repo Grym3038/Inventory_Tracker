@@ -11,8 +11,8 @@ class User
     public string $email;
     public string $password_hash;
     public int $client_id;
-
     public string $role;
+    
     /**
      * Find a user by email.
      */

@@ -10,39 +10,23 @@ use Models\User;
 
 switch ($action)
 {
-    case 'users':
-               
-                // Redirect to login if not authenticated
-                if (empty($_SESSION['user_id'])) {
-                    header('Location: index.php?controller=home&action=login');
-                    exit;
-                }
-                $user = User::findById($_SESSION['user_id']);
-                if ($user->role != 'admin') {
-                    // deny access
-                    $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
-                    header('Location: index.php?action=error');
-                    exit;
-                }else{
-                    include('Views/users.php');
-                exit();
-                }
-    case 'adminDashboard':
-                
-                // Redirect to login if not authenticated
-                if (empty($_SESSION['user_id'])) {
-                    header('Location: index.php?controller=home&action=login');
-                    exit;
-                }
-                $user = User::findById($_SESSION['user_id']);
-                if ($user->role !== 'admin') {
-                    // deny access
-                    $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
-                    header('Location: index.php?action=error');
-                    exit;
-                }
-                include('Views/adminDashboard.php');
-                exit();
+    case 'dashboard':
+                    if($_SESSION['role'] === 'employee'){
+                        header('Location: index.php?action=employeeDashboard');
+                        exit();
+                    }
+                    elseif( $_SESSION['role'] === 'owner'){
+                        header('Location: index.php?action=ownerDashboard');
+                        exit();
+                    }
+                    elseif( $_SESSION['role'] === 'admin'){
+                        header('Location: index.php?action=adminDashboard');
+                        exit();
+                    } else { $_SESSION['errors'] = ['An error occured. Please try again'];
+                        header('Location: index.php?action=error');
+                        exit();
+                    }
+        
     case 'ownerDashboard':
                 
                 // Redirect to login if not authenticated

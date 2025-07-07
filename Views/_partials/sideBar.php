@@ -30,14 +30,14 @@
                 <h2><?= $_SESSION["name"] ?></h2>
             </div>
             <div class="sidebar-menu">
-                <div class="menu-item active">
+                <div class="menu-item <?php echo ($action === 'dashboard' || $action === 'adminDashboard' || $action === 'ownerDashboard' || $action === 'employeeDashboard'   ) ? 'active' : ''; ?>">
                     <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
+                    <a  href="?action=dashboard">Dashboard</a>
                 </div>
                 <?php
-                    if($user->role === 'admin'):
+                    if($user->role === 'owner'):
                 ?>
-                <div class="menu-item">
+                <div class="menu-item <?= $action === 'home' ? 'active' : '' ?>">
                     <i class="fas fa-chart-line"></i>
                     <a href="?action=home" class="">Analytics</a>
                 </div>
@@ -48,21 +48,18 @@
                 <?php
                     elseif($user->role === 'admin'):
                 ?>
-                <div class="menu-item">
+                <div class="menu-item <?= $action === 'users' ? 'active' : '' ?>">
                     <i class="fas fa-users"></i>
                     <a href="?action=users" class="">User Management</a>
                 </div>
                 <?php
                     endif;
                 ?>
-                <div class="menu-item">
+                <div class="menu-item <?= $action === 'settings' ? 'active' : '' ?>">
                     <i class="fas fa-cog"></i>
-                    <a href="?action=log_in" class="">Settings</a>
+                    <a href="?action=" class="">Settings</a>
                 </div>
-                <div class="menu-item">
-                    <i class="fas fa-question-circle"></i>
-                    <a href="?action=about" class="">Help</a>
-                </div>
+
             </div>
             <div class="sidebar-footer ">
                 <i class="fas fa-question-circle"></i>
