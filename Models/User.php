@@ -12,6 +12,7 @@ class User
     public string $password_hash;
     public int $client_id;
 
+    public string $role;
     /**
      * Find a user by email.
      */
@@ -19,7 +20,7 @@ class User
     {
         $db = Database::getConnection();
         $stmt = $db->prepare(
-            'SELECT id, name, email, password_hash, client_id FROM users WHERE email = :email LIMIT 1'
+            'SELECT id, name, email, password_hash, client_id, role FROM users WHERE email = :email LIMIT 1'
         );
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
@@ -35,6 +36,7 @@ class User
         $user->email         = $data['email'];
         $user->password_hash = $data['password_hash'];
         $user->client_id     = (int)$data['client_id'];
+        $user->role          = $data['role'];
         return $user;
     }
 
@@ -45,9 +47,9 @@ class User
     {
         $db = Database::getConnection();
         if (!empty($this->id)) {
-            $sql = 'UPDATE users SET name = :name, email = :email, password_hash = :hash, client_id = :client_id WHERE id = :id';
+            $sql = 'UPDATE users SET name = :name, email = :email, password_hash = :hash, client_id = :client_id, role = :role WHERE id = :id';
         } else {
-            $sql = 'INSERT INTO users (name, email, password_hash, client_id) VALUES (:name, :email, :hash, :client_id)';
+            $sql = 'INSERT INTO users (name, email, password_hash, client_id, role) VALUES (:name, :email, :hash, :client_id, role)';
         }
 
         $stmt = $db->prepare($sql);
@@ -55,6 +57,7 @@ class User
         $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
         $stmt->bindValue(':hash', $this->password_hash, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $this->client_id, PDO::PARAM_INT);
+        $stmt->bindValue(':role', $this->role, PDO::PARAM_INT);
         if (!empty($this->id)) {
             $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
         }
@@ -64,6 +67,28 @@ class User
             $this->id = (int)$db->lastInsertId();
         }
         return $result;
+    }
+
+     public static function findById(int $id): ?User
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare(
+            'SELECT id, name, email, password_hash, client_id, role FROM users WHERE id = :id LIMIT 1'
+        );
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$data) {
+            return null;
+        }
+        $user = new User();
+        $user->id            = (int)$data['id'];
+        $user->name          = $data['name'];
+        $user->email         = $data['email'];
+        $user->password_hash = $data['password_hash'];
+        $user->client_id     = (int)$data['client_id'];
+        $user->role          = $data['role'];
+        return $user;
     }
 }
 ?>

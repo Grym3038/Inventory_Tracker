@@ -50,6 +50,7 @@ require('Models/User.php');
 require('Models/Database.php');
 // Register the controllers
 require('Controllers/HomeController.php');
+require('Controllers/DashboardController.php');
 
 
 

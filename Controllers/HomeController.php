@@ -1,10 +1,32 @@
 <?php
 /**
  * Title: Home Controller
- * Purpose: To view home page and any other actions
+ * Purpose: To view home page and handle authentication actions securely
  */
 
+use Google\Service\IDS\IdsEmpty;
 use Models\User;
+
+// Centralize session start and security checks
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    // Set secure session cookie params in front controller ideally
+    session_start();
+}
+
+// Fingerprint validation to prevent session hijacking
+define('FINGERPRINT_AGENT', hash('sha256', $_SERVER['HTTP_USER_AGENT'] ?? ''));
+define('FINGERPRINT_IP', $_SERVER['REMOTE_ADDR'] ?? '');
+if (isset($_SESSION['user_id'])) {
+    if (($_SESSION['fingerprint_agent'] ?? '') !== FINGERPRINT_AGENT ||
+        ($_SESSION['fingerprint_ip'] ?? '') !== FINGERPRINT_IP) {
+        // Invalidate session
+        $_SESSION = [];
+        session_destroy();
+        header('Location: index.php?action=loginForm');
+        exit();
+    }
+}
+
 switch ($action)
 {
         /**
@@ -13,19 +35,44 @@ switch ($action)
         case 'home':
                 include('Views/home.php');
                 exit();
-        case 'dashboard':
-                include('Views/dashboard.php');
-                exit();
-        case 'users':
-                include('Views/users.php');
-                exit();
+        
+        
         case 'about':
                 include('Views/About.php');
                 exit();
         case 'loginForm':
+                if (isset($_SESSION['user_id'])){
+                include('Views/dashboard.php');
+                exit();
+                }
                 include('Views/login.php');
                 exit();
         case 'login':
+                // Regenerate session ID to prevent fixation
+                session_regenerate_id(true);
+
+
+                $remember = isset($_POST['remember-me']);
+
+                if ($remember) {
+                        // 30 days
+                        $lifetime = 60 * 60 * 24 * 30;
+                } else {
+                        // default (e.g. browser session)
+                        $lifetime = 0;
+                }
+              
+
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                session_start();
+                }
+
+
+
+                // Start session if not already
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                        session_start();
+                }
                 // Sanitize inputs
                 $email    = filter_input(INPUT_POST, 'loginEmail', FILTER_SANITIZE_EMAIL);
                 $password = $_POST['loginPassword'] ?? '';
@@ -52,12 +99,34 @@ switch ($action)
                         exit;
                 }
 
-                // Success
-                $_SESSION["name"] = $user->name;
-                $_SESSION['user_id'] = $user->id;
+                // Success, bind session to fingerprint
+                $_SESSION['user_id']            = $user->id;
+                $_SESSION['fingerprint_agent']  = FINGERPRINT_AGENT;
+                $_SESSION['fingerprint_ip']     = FINGERPRINT_IP;
+                $_SESSION['name']               = $user->name;
+                $_SESSION['role']               = $user->role;
+
+                // Extend cookie for "remember me"
+                if ($remember) {
+                $params = session_get_cookie_params();
+                setcookie(
+                        session_name(),
+                        session_id(),
+                        time() + 60 * 60 * 24 * 30,
+                        $params['path'],
+                        $params['domain'] ?? '',
+                        $params['secure'],
+                        $params['httponly']
+                );
+                }  
                 include('Views/dashboard.php');
                 exit();
         case 'signup':
+                // Start session if not already
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                        session_start();
+                }
+
                 // Sanitize inputs
                 $name            = trim($_POST['signupName'] ?? '');
                 $email           = filter_input(INPUT_POST, 'signupEmail', FILTER_SANITIZE_EMAIL);
@@ -100,6 +169,7 @@ switch ($action)
                 $user->name          = $name;
                 $user->email         = $email;
                 $user->password_hash = $hash;
+                $user->role = 'employee';
                 // Set client_id to a valid existing client, e.g. from session or default
                 $user->client_id     = $_SESSION['client_id'] ?? 1;
                 $user->save();
@@ -107,11 +177,35 @@ switch ($action)
                 // Success
                 $_SESSION["name"] = $user->name;
                 $_SESSION['user_id'] = $user->id;
+                $_SESSION['role'] = 'employee';
                 include('Views/dashboard.php');
                 exit();
-        case 'items':
-                include('Views/items.php');
-                exit();
+        case 'logout':
+                // Start session if not already
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                        session_start();
+                }
+                // Clear session data
+                $_SESSION = [];
+                // Invalidate session cookie
+                if (ini_get('session.use_cookies')) {
+                $params = session_get_cookie_params();
+                setcookie(
+                        session_name(),
+                        '',
+                        time() - 42000,
+                        $params['path'],
+                        $params['domain'] ?? '',
+                        $params['secure'],
+                        $params['httponly']
+                );
+                }
+                session_destroy();
+
+                // Redirect to home
+                header('Location: index.php?action=home');
+                exit;
+        
         case 'redirect':
                 include('Views/redirect.php');
                 exit();
