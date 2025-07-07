@@ -46,7 +46,7 @@
     </p>
 
     <!-- User Table -->
-    <div class="overflow-x-auto bg-white rounded-lg shadow w-[70%] m-auto p-0">
+    <div class="overflow-x-auto bg-white rounded-lg shadow w-[70%] mx-auto p-0">
       <table class="w-full table-auto">
         <thead>
           <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
