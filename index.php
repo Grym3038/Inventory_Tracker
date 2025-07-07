@@ -30,10 +30,8 @@ function return500()
     exit();
 }
 
-// Start the session
-$lifetime = 60 * 60 * 24 * 365; // 1 year in seconds
-session_set_cookie_params($lifetime, '/');
-session_start();
+
+
 
 
 function filter_string_polyfill(string $string): string
@@ -44,10 +42,16 @@ function filter_string_polyfill(string $string): string
 
 // Get the action
 $action = filter_string_polyfill(isset($_GET['action']) ? (string)$_GET['action'] : 'home');
-
-
+//require models
+require('Models/AdminDBAccess.php');
+require('Models/User.php');
+require('Models/Database.php');
 // Register the controllers
 require('Controllers/HomeController.php');
+require('Controllers/DashboardController.php');
+require('Controllers/AdminController.php');
+
+
 
 
 // return404();
