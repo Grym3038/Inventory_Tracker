@@ -12,8 +12,7 @@
         }
 
         * {
-            margin: 0;
-            padding: 0;
+
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -34,6 +33,9 @@
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
         }
 
         .sidebar-header {
@@ -50,8 +52,10 @@
         }
 
         .sidebar-menu {
+            height: 100%;
             padding: 20px 0;
         }
+
 
         .menu-item {
             padding: 12px 20px;
@@ -78,10 +82,25 @@
             text-align: center;
         }
 
+        .sidebar-footer{
+            
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         /* Main Content Styles */
         .main-content {
             flex: 1;
             padding: 20px;
+            height: 100vh;
+            overflow: scroll;
+            overflow-x: hidden;
         }
 
         /* Header Styles */
@@ -416,3 +435,65 @@
                 grid-template-columns: 1fr;
             }
         }
+
+           @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+  @keyframes slideDown {
+              from {
+                  transform: translateY(-100%);
+                  opacity: 0;
+              }
+              to {
+                  transform: translateY(0);
+                  opacity: 1;
+
+              }
+          }
+    
+    /* Animation classes */
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .animate-pulse {
+      animation: pulse 3s ease infinite;
+    }
+
+    .animate-slide-down {
+      animation: slideDown .6s ease-out;
+    }
