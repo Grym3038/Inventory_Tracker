@@ -43,7 +43,7 @@
                 </div>
                 <div class="menu-item">
                     <i class="fas fa-file-alt"></i>
-                    <a href="?action=items" class="">Content</a>
+                    <a href="?action=items" class="">Products</a>
                 </div>
                 <?php
                     elseif($user->role === 'admin'):

@@ -13,7 +13,7 @@ VALUES
   (1, 1, 'ADMIN', 'Admin@email.com',
      '$2y$10$KC5zrfX7wmI5qkQ.Vdg7Ye0KhKUsj5L4vJNpZnDp2l9s61CjmPTAu', 'admin', NOW()),
   (2, 1, 'Owner Test', 'Owner@email.com',
-     '$2y$10$dKNt6dtEL1ADW6rgacIHL.GyopCxpaZFr0rPymqdAxhRLTCQDzASy', 'owner', NOW());
+     '$2y$10$dKNt6dtEL1ADW6rgacIHL.GyopCxpaZFr0rPymqdAxhRLTCQDzASy', 'owner', NOW()),
   (3, 1, 'Employee Test', 'employee@email.com',
      '$2y$10$Rcw1N6wQAhYgzE2CLhhm/elZ3.ucBvE3rCmHdUM1BZ8/8u06E4pbO', 'employee', NOW());
 

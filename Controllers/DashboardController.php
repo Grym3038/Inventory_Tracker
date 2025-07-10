@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Title: Dashboard Controller
  * Purpose: To view Dashboard page and any other actions
