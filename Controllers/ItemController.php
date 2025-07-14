@@ -2,21 +2,45 @@
 namespace Controllers;
 
 use Models\Item;
+use Models\User;
 
-class ItemController
+switch ($action)
 {
     // List all items for a client
-    public function index()
-    {
+    case 'items':
+    
+        if (empty($_SESSION['user_id'])) {
+                    header('Location: index.php?controller=home&action=login');
+                    exit;
+                }
+                $user = User::findById($_SESSION['user_id']);
+                if ($user->role === 'employee') {
+                    // deny access
+                    $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
+                    header('Location: index.php?action=error');
+                    exit;
+                }
         $client_id = $_SESSION['client_id'] ?? 1; // Use actual session logic
         $items = Item::findAllByClient($client_id);
 
-        include __DIR__ . '/../Views/items.php';
-    }
+        include __DIR__ . '/../Views/itemsView.php';
+        exit();
 
     // Show edit form and process update
-    public function edit()
-    {
+    case 'edit':
+
+        if (empty($_SESSION['user_id'])) {
+                    header('Location: index.php?controller=home&action=login');
+                    exit;
+                }
+                $user = User::findById($_SESSION['user_id']);
+                if ($user->role === 'employee') {
+                    // deny access
+                    $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
+                    header('Location: index.php?action=error');
+                    exit;
+                }
+    
         $client_id = $_SESSION['client_id'] ?? 1;
         $errors = [];
         $success = false;
@@ -63,11 +87,23 @@ class ItemController
         }
 
         include __DIR__ . '/../Views/editItem.php';
-    }
+        exit();
 
     // Handle deleting an item
-    public function delete()
-    {
+    case 'delete':
+    
+        if (empty($_SESSION['user_id'])) {
+                    header('Location: index.php?controller=home&action=login');
+                    exit;
+                }
+                $user = User::findById($_SESSION['user_id']);
+                if ($user->role === 'employee') {
+                    // deny access
+                    $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
+                    header('Location: index.php?action=error');
+                    exit;
+                }
+
         $item_id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         if ($item_id) {
             $item = Item::findById($item_id);
@@ -76,12 +112,22 @@ class ItemController
             }
         }
         header("Location: index.php?action=items");
-        exit;
-    }
+        exit();
 
     // Show create form and process new item
-    public function create()
-    {
+    case 'create':
+
+        if (empty($_SESSION['user_id'])) {
+                    header('Location: index.php?controller=home&action=login');
+                    exit;
+                }
+                $user = User::findById($_SESSION['user_id']);
+                if ($user->role === 'employee') {
+                    // deny access
+                    $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
+                    header('Location: index.php?action=error');
+                    exit;
+                }
         $client_id = $_SESSION['client_id'] ?? 1;
         $errors = [];
         $success = false;
@@ -115,5 +161,5 @@ class ItemController
         }
 
         include __DIR__ . '/../Views/editItem.php'; // reuse form view for create
-    }
+        exit();
 }

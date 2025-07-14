@@ -46,9 +46,8 @@ class Item
     {
         $db = Database::getConnection();
         $stmt = $db->prepare(
-            'SELECT id, client_id, sku, name, threshold_qty, current_qty
-             FROM items WHERE client_id = :client_id ORDER BY name'
-        );
+        'SELECT id, client_id, sku, name, threshold_qty, current_qty, created_at
+         FROM items WHERE client_id = :client_id ORDER BY name');
         $stmt->bindValue(':client_id', $client_id, PDO::PARAM_INT);
         $stmt->execute();
 

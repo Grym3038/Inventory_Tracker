@@ -1,4 +1,4 @@
-<?php include('Views/_partials/header.php'); ?>
+<?php include('Views/_partials/sidebar.php'); ?>
 
 <div class="w-full h-full col-span-7">
   <div class="w-full flex flex-col overflow-y-auto p-4 bg-white dark:bg-gray-900">
@@ -77,4 +77,9 @@
     </div>
   </div>
 </div>
-<?php include('Views/_partials/footer.php'); ?>
+<script src="node_modules\flowbite\dist\flowbite.min.js"></script>
+
+</body>
+
+
+</html>

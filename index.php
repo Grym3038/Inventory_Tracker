@@ -46,7 +46,7 @@ $action = filter_string_polyfill(isset($_GET['action']) ? (string)$_GET['action'
 require('Models/AdminDBAccess.php');
 require('Models/User.php');
 require('Models/Database.php');
-require('Models/Items.php');
+require('Models/Item.php');
 // Register the controllers
 require('Controllers/HomeController.php');
 require('Controllers/DashboardController.php');
