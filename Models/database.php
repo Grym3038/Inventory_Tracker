@@ -21,7 +21,7 @@ class Database
             try {
                 $dsn      = 'mysql:host=localhost;dbname=shelfaware;charset=utf8mb4';
                 $username = 'root';
-                $password = '';
+                $password = 'Neverwinter214';
                 $options  = [
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

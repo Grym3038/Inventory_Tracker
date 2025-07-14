@@ -2,6 +2,7 @@
 namespace Models;
 
 use PDO;
+use PDOException;
 use Models\Database;
 
 class Item
@@ -12,6 +13,7 @@ class Item
     public string $name;
     public int $threshold_qty;
     public int $current_qty;
+    public ?string $created_at;
 
     /**
      * Find item by id.
@@ -20,7 +22,7 @@ class Item
     {
         $db = Database::getConnection();
         $stmt = $db->prepare(
-            'SELECT id, client_id, sku, name, threshold_qty, current_qty
+            'SELECT id, client_id, sku, name, threshold_qty, current_qty, created_at
              FROM items WHERE id = :id LIMIT 1'
         );
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -36,6 +38,7 @@ class Item
         $item->name          = $data['name'];
         $item->threshold_qty = (int)$data['threshold_qty'];
         $item->current_qty   = (int)$data['current_qty'];
+        $item->created_at    = $data['created_at'];
         return $item;
     }
 
@@ -60,6 +63,7 @@ class Item
             $item->name          = $row['name'];
             $item->threshold_qty = (int)$row['threshold_qty'];
             $item->current_qty   = (int)$row['current_qty'];
+            $item->created_at    = $row['created_at'];
             $result[] = $item;
         }
         return $result;
@@ -130,9 +134,23 @@ class Item
     public function delete(): bool
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare('DELETE FROM items WHERE id = :id');
-        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
-        return $stmt->execute();
+        
+        try {
+            // First, delete related inventory float entries
+            $stmt = $db->prepare('DELETE FROM inventory_float_entries WHERE item_id = :id');
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Then delete the item
+            $stmt = $db->prepare('DELETE FROM items WHERE id = :id');
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            return $stmt->execute();
+            
+        } catch (PDOException $e) {
+            // Log the error for debugging
+            error_log("Failed to delete item {$this->id}: " . $e->getMessage());
+            return false;
+        }
     }
 }
 ?>
