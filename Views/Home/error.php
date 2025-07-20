@@ -5,7 +5,7 @@
  */
 ?>
 
-<?php include('views/_partials/header.php'); ?>
+<?php include('Views/_partials/header.php'); ?>
 
 <h1>
     <?php echo $title; ?>
@@ -19,4 +19,4 @@
     </a>
 </p>
 
-<?php include('views/_partials/footer.php'); ?>
+<?php include('Views/_partials/footer.php'); ?>

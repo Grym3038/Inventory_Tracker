@@ -4,6 +4,9 @@
  * Purpose: To serve as the entry point of the application that imports all
  *          models and controllers
  */
+
+// Start the session
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -46,11 +49,12 @@ $action = filter_string_polyfill(isset($_GET['action']) ? (string)$_GET['action'
 require('Models/AdminDBAccess.php');
 require('Models/User.php');
 require('Models/Database.php');
+require('Models/Item.php');
 // Register the controllers
 require('Controllers/HomeController.php');
 require('Controllers/DashboardController.php');
 require('Controllers/AdminController.php');
-
+require('Controllers/ItemController.php');
 
 
 

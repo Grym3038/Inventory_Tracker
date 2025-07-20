@@ -17,7 +17,7 @@ $url = $client->createAuthUrl();
 
 
 <div class="container m-auto p-4 flex  w-full h-full items-center justify-center">
-        <div class="w-[35rem] h-[50rem] max-w-lg m-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl py-6 flex items-center justify-center">
+        <div class="w-[35rem] max-w-lg m-auto bg-white rounded-xl shadow-md py-6 flex items-center justify-center">
             <div class="p-10 m-auto h-[80%] w-[80%]">
                 <!-- Toggle between Login and Signup -->
                 <div class="flex justify-center mb-8">
@@ -111,7 +111,6 @@ $url = $client->createAuthUrl();
             </div>
         </div>
     </div>
-</div>
 </div>
     <script>
        document.addEventListener('DOMContentLoaded', () => {

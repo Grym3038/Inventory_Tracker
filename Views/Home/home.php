@@ -2,11 +2,11 @@
 
 <!-- Hero section -->
 <section>
-<div class="flex h-[45rem]  lg:h-[45rem] xl:h-[50rem] self-center m-auto justify-center items-center dark:bg-slate-800">
+<div class="flex h-[45rem]  lg:h-[45rem] xl:h-[50rem] self-center m-auto justify-center items-center">
     <div class="mx-auto mt-0 flex justify-center px-4  sm:px-6  lg:px-8">
         <div class="text-center ">
             <h1
-                class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-slate-200 sm:text-5xl md:text-6xl">
+                class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
                 <span class="block xl:inline"><span class="mb-1 block">Scalable Inventory</span>
                 <span class="bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
                     Tracking Solution 
@@ -24,7 +24,7 @@
                     </span>
                 </div>
             </h1>
-            <p class="mx-auto mt-3 max-w-xl text-lg text-gray-500 dark:text-slate-400 sm:mt-5 md:mt-5">
+            <p class="mx-auto mt-3 max-w-xl text-lg text-gray-500 sm:mt-5 md:mt-5">
                 Sub-header: Optimize stock levels, reduce carrying costs, and boost fulfillment speed using AI-driven insights.
            </p>
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center">

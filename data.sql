@@ -13,19 +13,32 @@ VALUES
   (1, 1, 'ADMIN', 'Admin@email.com',
      '$2y$10$KC5zrfX7wmI5qkQ.Vdg7Ye0KhKUsj5L4vJNpZnDp2l9s61CjmPTAu', 'admin', NOW()),
   (2, 1, 'Owner Test', 'Owner@email.com',
-     '$2y$10$dKNt6dtEL1ADW6rgacIHL.GyopCxpaZFr0rPymqdAxhRLTCQDzASy', 'owner', NOW());
+     '$2y$10$dKNt6dtEL1ADW6rgacIHL.GyopCxpaZFr0rPymqdAxhRLTCQDzASy', 'owner', NOW()),
   (3, 1, 'Employee Test', 'employee@email.com',
      '$2y$10$Rcw1N6wQAhYgzE2CLhhm/elZ3.ucBvE3rCmHdUM1BZ8/8u06E4pbO', 'employee', NOW());
 
 
 
 -- -------------------------------------------------------------------
--- 4) Two inventory items
+-- 4) Multiple inventory items for pagination testing
 -- -------------------------------------------------------------------
 INSERT INTO items (id, client_id, sku, name, threshold_qty, current_qty, created_at)
 VALUES
   (1, 1, 'SKU-APPLE',  'Apple',   10, 50, NOW()),
-  (2, 1, 'SKU-BANANA', 'Banana',  20, 30, NOW());
+  (2, 1, 'SKU-BANANA', 'Banana',  20, 30, NOW()),
+  (3, 1, 'SKU-ORANGE', 'Orange',  15, 25, NOW()),
+  (4, 1, 'SKU-GRAPE',  'Grape',   8, 40, NOW()),
+  (5, 1, 'SKU-MANGO',  'Mango',   12, 18, NOW()),
+  (6, 1, 'SKU-PINEAPPLE', 'Pineapple', 5, 35, NOW()),
+  (7, 1, 'SKU-STRAWBERRY', 'Strawberry', 10, 22, NOW()),
+  (8, 1, 'SKU-BLUEBERRY', 'Blueberry', 6, 28, NOW()),
+  (9, 1, 'SKU-RASPBERRY', 'Raspberry', 4, 15, NOW()),
+  (10, 1, 'SKU-BLACKBERRY', 'Blackberry', 7, 32, NOW()),
+  (11, 1, 'SKU-CHERRY', 'Cherry', 9, 45, NOW()),
+  (12, 1, 'SKU-PEACH', 'Peach', 11, 38, NOW()),
+  (13, 1, 'SKU-PLUM', 'Plum', 6, 20, NOW()),
+  (14, 1, 'SKU-APRICOT', 'Apricot', 8, 26, NOW()),
+  (15, 1, 'SKU-NECTARINE', 'Nectarine', 10, 33, NOW());
 
 -- -------------------------------------------------------------------
 -- 5) One open float for today

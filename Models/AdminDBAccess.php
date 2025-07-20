@@ -40,9 +40,9 @@ class AdminDBAccess
     // Fetch a page of users for a given client + optional email filter
     public static function getUsers(
         int    $clientId,
-        string $emailFilter = '',
         int    $limit,
-        int    $offset
+        int    $offset,
+        string $emailFilter = ''
     ): array {
         $db = Database::getConnection();
         $sql = 'SELECT id, name, email, role
