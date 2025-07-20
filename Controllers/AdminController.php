@@ -39,7 +39,7 @@ switch ($action)
                         // 4) Count & fetch only if a client is selected
                         $totalUsers = AdminDBAccess::countUsers($clientId, $emailFilter);
                         $users      = AdminDBAccess::getUsers(
-                            $clientId, $emailFilter, $perPage, $offset
+                            $clientId, $perPage, $offset, $emailFilter
                         );
                     }
 
