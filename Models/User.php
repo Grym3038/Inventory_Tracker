@@ -131,5 +131,16 @@ class User
         }
         return $result;
     }
+
+    /**
+     * Delete a user by ID.
+     */
+    public function delete(): bool
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare('DELETE FROM users WHERE id = :id');
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 }
 ?>
