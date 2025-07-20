@@ -33,8 +33,8 @@
                 <nav class="hidden lg:flex space-x-10 text-sm lg:text-md">
                     <a href="." class="text-gray-700 font-semibold hover:text-black transition-all">Home</a>
                     <a href="?action=pricing" class="text-gray-700 font-semibold hover:text-black transition-all">Pricing</a>
-                    <a href="?action=About" class="text-gray-700 font-semibold hover:text-black transition-all">About Us</a>
-                    <a href="?action=Contact" class="text-gray-700 font-semibold hover:text-black transition-all">Contact</a>
+                    <a href="?action=about" class="text-gray-700 font-semibold hover:text-black transition-all">About Us</a>
+                    <a href="?action=contact" class="text-gray-700 font-semibold hover:text-black transition-all">Contact</a>
                 </nav>
 
                 <!-- Call-to-Action Button -->
@@ -69,8 +69,8 @@
                 </div>
                 <a href="." class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Home</a>
                 <a href="?action=pricing" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Pricing</a>
-                <a href="?action=About" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">About Us</a>
-                <a href="?action=Contact" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Contact</a>
+                <a href="?action=about" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">About Us</a>
+                <a href="?action=contact" class="block text-lg text-gray-700 font-semibold hover:text-black transition-all px-10 sm:px-16">Contact</a>
 
             </div>
         </div>

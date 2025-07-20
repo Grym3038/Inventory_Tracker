@@ -19,6 +19,31 @@
         </a>
       </div>
     </div>
+    
+    <!-- Filter Controls -->
+    <div class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div class="flex items-center gap-4">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by stock status:</label>
+        <div class="flex gap-2">
+          <a href="index.php?action=items" 
+             class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors <?= !isset($_GET['filter']) ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600' ?>">
+            All Items
+          </a>
+          <a href="index.php?action=items&filter=in-stock" 
+             class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors <?= (isset($_GET['filter']) && $_GET['filter'] === 'in-stock') ? 'bg-green-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600' ?>">
+            In Stock
+          </a>
+          <a href="index.php?action=items&filter=low-stock" 
+             class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors <?= (isset($_GET['filter']) && $_GET['filter'] === 'low-stock') ? 'bg-orange-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600' ?>">
+            Low Stock
+          </a>
+          <a href="index.php?action=items&filter=out-of-stock" 
+             class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors <?= (isset($_GET['filter']) && $_GET['filter'] === 'out-of-stock') ? 'bg-red-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600' ?>">
+            Out of Stock
+          </a>
+        </div>
+      </div>
+    </div>
     <div class="flex flex-col overflow-y-auto h-full">
       <!-- Success/Error Messages -->
       <?php if (isset($_SESSION['success'])): ?>
@@ -105,7 +130,7 @@
                 <td class="px-2 py-2 text-center flex gap-1 justify-center">
                   <a href="index.php?action=edit_item&id=<?= $item->id ?>"
                      class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold py-1 px-2 rounded transition">Edit</a>
-                  <a href="index.php?action=confirm_delete&id=<?= $item->id ?>&type=item&page=<?= $pagination['current_page'] ?>"
+                  <a href="index.php?action=confirm_delete&id=<?= $item->id ?>&type=item&page=<?= $pagination['current_page'] ?><?= isset($_GET['filter']) ? '&filter=' . htmlspecialchars($_GET['filter']) : '' ?>"
                      class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-semibold py-1 px-2 rounded transition">
                     Delete
                   </a>
@@ -143,7 +168,7 @@
           <div class="flex items-center gap-2">
             <!-- Previous Page -->
             <?php if ($pagination['has_previous']): ?>
-              <a href="index.php?action=items&page=<?= $pagination['previous_page'] ?>" 
+              <a href="index.php?action=items&page=<?= $pagination['previous_page'] ?><?= isset($_GET['filter']) ? '&filter=' . htmlspecialchars($_GET['filter']) : '' ?>" 
                  class="px-3 py-2 text-sm font-medium text-gray-500 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                 Previous
               </a>
@@ -160,7 +185,7 @@
               $end_page = min($pagination['total_pages'], $pagination['current_page'] + 2);
               
               if ($start_page > 1): ?>
-                <a href="index.php?action=items&page=1" 
+                <a href="index.php?action=items&page=1<?= isset($_GET['filter']) ? '&filter=' . htmlspecialchars($_GET['filter']) : '' ?>" 
                    class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                   1
                 </a>
@@ -175,7 +200,7 @@
                     <?= $i ?>
                   </span>
                 <?php else: ?>
-                  <a href="index.php?action=items&page=<?= $i ?>" 
+                  <a href="index.php?action=items&page=<?= $i ?><?= isset($_GET['filter']) ? '&filter=' . htmlspecialchars($_GET['filter']) : '' ?>" 
                      class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                     <?= $i ?>
                   </a>
@@ -186,7 +211,7 @@
                 <?php if ($end_page < $pagination['total_pages'] - 1): ?>
                   <span class="px-2 py-2 text-sm text-gray-500 dark:text-gray-400">...</span>
                 <?php endif; ?>
-                <a href="index.php?action=items&page=<?= $pagination['total_pages'] ?>" 
+                <a href="index.php?action=items&page=<?= $pagination['total_pages'] ?><?= isset($_GET['filter']) ? '&filter=' . htmlspecialchars($_GET['filter']) : '' ?>" 
                    class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                   <?= $pagination['total_pages'] ?>
                 </a>
@@ -195,7 +220,7 @@
 
             <!-- Next Page -->
             <?php if ($pagination['has_next']): ?>
-              <a href="index.php?action=items&page=<?= $pagination['next_page'] ?>" 
+              <a href="index.php?action=items&page=<?= $pagination['next_page'] ?><?= isset($_GET['filter']) ? '&filter=' . htmlspecialchars($_GET['filter']) : '' ?>" 
                  class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                 Next
               </a>

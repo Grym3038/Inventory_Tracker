@@ -7,7 +7,7 @@
             <div class="header">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Search inventory...">
                 </div>
                 <div class="user-actions">
                     <div class="notification">
@@ -33,44 +33,44 @@
                 <div class="stat-card">
                     <div class="stat-card-header">
                         <div>
-                            <div class="stat-value">1,248</div>
-                            <div class="stat-label">Total Users</div>
+                            <div class="stat-value">1,247</div>
+                            <div class="stat-label">Total Items</div>
                         </div>
                         <div class="stat-icon users">
-                            <i class="fas fa-users"></i>
+                            <i class="fas fa-boxes"></i>
                         </div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-header">
                         <div>
-                            <div class="stat-value">342</div>
-                            <div class="stat-label">Active Sessions</div>
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Low Stock Items</div>
                         </div>
                         <div class="stat-icon sessions">
-                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-exclamation-triangle"></i>
                         </div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-header">
                         <div>
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label">System Health</div>
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Out of Stock</div>
                         </div>
                         <div class="stat-icon health">
-                            <i class="fas fa-heartbeat"></i>
+                            <i class="fas fa-times-circle"></i>
                         </div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-header">
                         <div>
-                            <div class="stat-value">5</div>
-                            <div class="stat-label">Recent Alerts</div>
+                            <div class="stat-value">$45,230</div>
+                            <div class="stat-label">Inventory Value</div>
                         </div>
                         <div class="stat-icon alerts">
-                            <i class="fas fa-exclamation-triangle"></i>
+                            <i class="fas fa-dollar-sign"></i>
                         </div>
                     </div>
                 </div>
@@ -79,10 +79,10 @@
             <!-- Main Content Grid -->
             <div class="content-grid">
                 <div class="left-column">
-                    <!-- Activity Chart -->
+                    <!-- Inventory Activity Chart -->
                     <div class="chart-container">
                         <div class="section-header">
-                            <h3 class="section-title">Activity Overview</h3>
+                            <h3 class="section-title">Inventory Activity</h3>
                             <select style="padding: 5px; border-radius: 5px; border: 1px solid #ddd;">
                                 <option>Last 7 Days</option>
                                 <option>Last 30 Days</option>
@@ -90,14 +90,14 @@
                             </select>
                         </div>
                         <div class="chart-placeholder">
-                            [Activity Chart Will Appear Here]
+                            [Inventory Activity Chart Will Appear Here]
                         </div>
                     </div>
 
-                    <!-- Recent Actions -->
+                    <!-- Recent Inventory Actions -->
                     <div class="recent-actions">
                         <div class="section-header">
-                            <h3 class="section-title">Recent Actions</h3>
+                            <h3 class="section-title">Recent Inventory Actions</h3>
                             <button style="background: none; border: none; color: var(--primary); cursor: pointer;">
                                 View All
                             </button>
@@ -105,37 +105,37 @@
                         <div class="actions-list">
                             <div class="action-item">
                                 <div class="action-icon">
-                                    <i class="fas fa-user-plus"></i>
+                                    <i class="fas fa-plus-circle"></i>
                                 </div>
                                 <div class="action-details">
-                                    <div class="action-title">New user registered</div>
+                                    <div class="action-title">New item added: "Wireless Headphones"</div>
                                     <div class="action-time">2 minutes ago</div>
                                 </div>
                             </div>
                             <div class="action-item">
                                 <div class="action-icon">
-                                    <i class="fas fa-file-upload"></i>
+                                    <i class="fas fa-edit"></i>
                                 </div>
                                 <div class="action-details">
-                                    <div class="action-title">Document uploaded</div>
+                                    <div class="action-title">Quantity updated: "Laptop Chargers" (+15 units)</div>
                                     <div class="action-time">15 minutes ago</div>
                                 </div>
                             </div>
                             <div class="action-item">
                                 <div class="action-icon">
-                                    <i class="fas fa-cog"></i>
+                                    <i class="fas fa-exclamation-triangle"></i>
                                 </div>
                                 <div class="action-details">
-                                    <div class="action-title">System settings updated</div>
+                                    <div class="action-title">Low stock alert: "USB Cables" (5 remaining)</div>
                                     <div class="action-time">1 hour ago</div>
                                 </div>
                             </div>
                             <div class="action-item">
                                 <div class="action-icon">
-                                    <i class="fas fa-shield-alt"></i>
+                                    <i class="fas fa-trash"></i>
                                 </div>
                                 <div class="action-details">
-                                    <div class="action-title">Security patch applied</div>
+                                    <div class="action-title">Item removed: "Obsolete Keyboard Model"</div>
                                     <div class="action-time">3 hours ago</div>
                                 </div>
                             </div>
@@ -144,53 +144,53 @@
                 </div>
 
                 <div class="right-column">
-                    <!-- System Status -->
+                    <!-- Inventory Status -->
                     <div class="system-status">
                         <div class="section-header">
-                            <h3 class="section-title">System Status</h3>
+                            <h3 class="section-title">Inventory Status</h3>
                             <i class="fas fa-sync-alt" style="color: var(--gray); cursor: pointer;"></i>
                         </div>
                         <div class="status-list">
                             <div class="status-item">
-                                <span class="status-label">Server Uptime</span>
-                                <span class="status-value good">99.9%</span>
+                                <span class="status-label">Items in Stock</span>
+                                <span class="status-value good">1,216</span>
                             </div>
                             <div class="status-item">
-                                <span class="status-label">CPU Usage</span>
-                                <span class="status-value">32%</span>
+                                <span class="status-label">Low Stock Items</span>
+                                <span class="status-value warning">23</span>
                             </div>
                             <div class="status-item">
-                                <span class="status-label">Memory Usage</span>
-                                <span class="status-value">45%</span>
+                                <span class="status-label">Out of Stock</span>
+                                <span class="status-value">8</span>
                             </div>
                             <div class="status-item">
-                                <span class="status-label">Database</span>
-                                <span class="status-value good">Normal</span>
+                                <span class="status-label">Categories</span>
+                                <span class="status-value good">12</span>
                             </div>
                             <div class="status-item">
-                                <span class="status-label">Last Backup</span>
-                                <span class="status-value warning">12 hours ago</span>
+                                <span class="status-label">Last Inventory Check</span>
+                                <span class="status-value warning">2 days ago</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Quick Actions -->
                     <div class="quick-actions">
-                        <button class="action-btn">
-                            <i class="fas fa-user-plus"></i>
-                            <span>Add User</span>
+                        <button class="action-btn" onclick="window.location.href='?action=add_item'">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Item</span>
                         </button>
-                        <button class="action-btn">
-                            <i class="fas fa-file-export"></i>
-                            <span>Export Data</span>
+                        <button class="action-btn" onclick="window.location.href='?action=items'">
+                            <i class="fas fa-boxes"></i>
+                            <span>View Inventory</span>
                         </button>
-                        <button class="action-btn">
+                        <button class="action-btn" onclick="window.location.href='?action=users'">
+                            <i class="fas fa-users"></i>
+                            <span>Manage Users</span>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='?action=settings'">
                             <i class="fas fa-cog"></i>
                             <span>Settings</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-question-circle"></i>
-                            <span>Help</span>
                         </button>
                     </div>
                 </div>
@@ -213,7 +213,7 @@
             // Notification click handler
             const notification = document.querySelector('.notification');
             notification.addEventListener('click', function() {
-                alert('You have 3 new notifications');
+                alert('You have 3 new inventory alerts');
             });
 
         });

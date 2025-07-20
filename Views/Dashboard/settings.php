@@ -1,24 +1,5 @@
 <?php
-
-
-// Get user information from session
-$user_name = $_SESSION['name'] ?? 'User';
-$user_email = $_SESSION['email'] ?? 'user@example.com';
-$user_role = $_SESSION['role'] ?? 'user';
-
-// Handle dark mode toggle
-if (isset($_POST['toggle_dark_mode'])) {
-    if (isset($_SESSION['dark_mode'])) {
-        $_SESSION['dark_mode'] = !$_SESSION['dark_mode'];
-    } else {
-        $_SESSION['dark_mode'] = true;
-    }
-    // Redirect to prevent form resubmission
-    header('Location: ?action=settings');
-    exit;
-}
-
-$is_dark_mode = $_SESSION['dark_mode'] ?? false;
+// User variables are now set by the controller
 ?>
 
 <?php include('Views/_partials/dashboardHeader.php'); ?>
@@ -119,9 +100,10 @@ $is_dark_mode = $_SESSION['dark_mode'] ?? false;
                   <h4 class="text-sm font-medium text-gray-900 dark:text-white">Dark Mode</h4>
                   <p class="text-xs text-gray-500 dark:text-gray-400">Switch between light and dark themes</p>
                 </div>
-                <form method="POST" class="flex items-center">
+                <form method="POST" class="flex items-center" id="darkModeForm">
+                  <input type="hidden" name="dark_mode_value" id="darkModeValue" value="<?= $is_dark_mode ? '1' : '0' ?>">
                   <label class="toggle-switch">
-                    <input type="checkbox" name="toggle_dark_mode" <?= $is_dark_mode ? 'checked' : '' ?> onchange="this.form.submit()">
+                    <input type="checkbox" id="darkModeToggle" <?= $is_dark_mode ? 'checked' : '' ?> onchange="updateDarkMode()">
                     <span class="slider"></span>
                   </label>
                 </form>
@@ -290,5 +272,19 @@ $is_dark_mode = $_SESSION['dark_mode'] ?? false;
             background-color: #3b82f6;
         }
     </style>
+
+<script>
+function updateDarkMode() {
+    const toggle = document.getElementById('darkModeToggle');
+    const hiddenInput = document.getElementById('darkModeValue');
+    const form = document.getElementById('darkModeForm');
+    
+    // Update the hidden input value based on checkbox state
+    hiddenInput.value = toggle.checked ? '1' : '0';
+    
+    // Submit the form
+    form.submit();
+}
+</script>
 
 <?php include('Views/_partials/footer.php'); ?> 

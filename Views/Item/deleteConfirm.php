@@ -73,6 +73,9 @@
             <input type="hidden" name="id" value="<?= htmlspecialchars($item_id ?? '') ?>">
             <input type="hidden" name="confirmed" value="1">
             <input type="hidden" name="current_page" value="<?= htmlspecialchars($_GET['page'] ?? '1') ?>">
+            <?php if (isset($_GET['filter'])): ?>
+            <input type="hidden" name="stock_filter" value="<?= htmlspecialchars($_GET['filter']) ?>">
+            <?php endif; ?>
             
             <!-- Confirmation checkbox -->
             <div class="flex items-start gap-3">

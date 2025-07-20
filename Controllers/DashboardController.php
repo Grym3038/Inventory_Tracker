@@ -41,7 +41,7 @@ switch ($action)
                     header('Location: index.php?action=error');
                     exit;
                 }
-                include('Views/ownerDashboard.php');
+                include('Views/Dashboard/ownerDashboard.php');
                 exit();
     case 'employeeDashboard':
                 // Redirect to login if not authenticated
@@ -51,7 +51,7 @@ switch ($action)
                 }
                 $user = User::findById($_SESSION['user_id']);
     
-                include('Views/employeeDashboard.php');
+                include('Views/Dashboard/employeeDashboard.php');
                 exit();
                 case 'settings':
                     // Redirect to login if not authenticated
@@ -73,8 +73,8 @@ switch ($action)
                     $user_role = $user->role;
 
                     // Handle dark mode toggle
-                    if (isset($_POST['toggle_dark_mode'])) {
-                        $new_dark_mode = !$user->darkmode_on;
+                    if (isset($_POST['dark_mode_value'])) {
+                        $new_dark_mode = ($_POST['dark_mode_value'] === '1');
                         if ($user->updateDarkMode($new_dark_mode)) {
                             $_SESSION['dark_mode'] = $new_dark_mode;
                             header('Location: ?action=settings');
@@ -102,7 +102,7 @@ switch ($action)
 
                     $is_dark_mode = $user->darkmode_on;
                     
-                    include('Views/settings.php');
+                    include('Views/Dashboard/settings.php');
                     exit();
     
             case 'paginated_table':
@@ -111,6 +111,6 @@ switch ($action)
                         header('Location: index.php?controller=home&action=login');
                         exit;
                     }
-                    include('Views/paginated_table.php');
+                    include('Views/Dashboard/paginated_table.php');
                     exit();
 }

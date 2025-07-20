@@ -32,19 +32,19 @@ switch ($action)
         case 'error':
                 $title = 'error';
                 $body =  $_SESSION['errors'][0];
-                include('Views/error.php');
+                include('Views/Home/error.php');
                 exit();
 
         /**
          * List all albums
          */
         case 'home':
-                include('Views/home.php');
+                include('Views/Home/home.php');
                 exit();
         
         
         case 'about':
-                include('Views/About.php');
+                include('Views/Home/About.php');
                 exit();
         case 'loginForm':
                 if (isset($_SESSION['user_id'])){
@@ -63,7 +63,7 @@ switch ($action)
                  
                  
                 }
-                include('Views/login.php');
+                include('Views/Home/login.php');
                 exit();
         case 'login':
                 // Regenerate session ID to prevent fixation
@@ -95,7 +95,7 @@ switch ($action)
 
                 if ($errors) {
                         $_SESSION['errors'] = $errors;
-                        include('Views/error.php');
+                        header('Location: index.php?action=error');
                         exit;
                 }
 
@@ -103,7 +103,7 @@ switch ($action)
                 $user = User::findByEmail($email);
                 if (!$user || !password_verify($password, $user->password_hash)) {
                         $_SESSION['errors'] = ['Email or password incorrect.'];
-                        include('Views/login.php');
+                        include('Views/Home/login.php');
                         exit;
                 }
 
@@ -179,7 +179,7 @@ switch ($action)
                 foreach($errors as $error){
                         $body = $body . $error;
                 }
-                include('Views/error.php');
+                include('Views/Home/error.php');
                 exit;
                 }
 
@@ -227,7 +227,21 @@ switch ($action)
                 exit;
         
         case 'redirect':
-                include('Views/redirect.php');
+                include('Views/Home/redirect.php');
+                exit();
+        case 'pricing':
+                include('Views/Home/pricing.php');
+                exit();
+        case 'contact':
+                include('Views/Home/contact.php');
+                exit();
+        case 'error':
+                $title = 'Error';
+                $body = '';
+                if (isset($_SESSION['errors']) && count($_SESSION['errors']) > 0) {
+                    $body = implode(' ', $_SESSION['errors']);
+                }
+                include('Views/Home/error.php');
                 exit();
 
 

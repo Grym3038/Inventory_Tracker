@@ -113,6 +113,90 @@ class Item
     }
 
     /**
+     * Count total items for a client with stock filter.
+     */
+    public static function countByClientWithFilter(int $client_id, ?string $stock_filter = null): int
+    {
+        $db = Database::getConnection();
+        $sql = 'SELECT COUNT(*) FROM items WHERE client_id = :client_id';
+        $params = [':client_id' => $client_id];
+        
+        if ($stock_filter) {
+            switch ($stock_filter) {
+                case 'out-of-stock':
+                    $sql .= ' AND current_qty = 0';
+                    break;
+                case 'low-stock':
+                    $sql .= ' AND current_qty > 0 AND current_qty < threshold_qty';
+                    break;
+                case 'in-stock':
+                    $sql .= ' AND current_qty >= threshold_qty';
+                    break;
+            }
+        }
+        
+        $stmt = $db->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
+     * List items for a client with pagination and stock filter.
+     */
+    public static function findAllByClientPaginatedWithFilter(int $client_id, int $page = 1, int $per_page = 10, ?string $stock_filter = null): array
+    {
+        $db = Database::getConnection();
+        $offset = ($page - 1) * $per_page;
+        
+        $sql = 'SELECT id, client_id, sku, name, threshold_qty, current_qty, created_at
+                FROM items WHERE client_id = :client_id';
+        $params = [
+            ':client_id' => $client_id,
+            ':limit' => $per_page,
+            ':offset' => $offset
+        ];
+        
+        if ($stock_filter) {
+            switch ($stock_filter) {
+                case 'out-of-stock':
+                    $sql .= ' AND current_qty = 0';
+                    break;
+                case 'low-stock':
+                    $sql .= ' AND current_qty > 0 AND current_qty < threshold_qty';
+                    break;
+                case 'in-stock':
+                    $sql .= ' AND current_qty >= threshold_qty';
+                    break;
+            }
+        }
+        
+        $sql .= ' ORDER BY name LIMIT :limit OFFSET :offset';
+        
+        $stmt = $db->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $item = new Item();
+            $item->id            = (int)$row['id'];
+            $item->client_id     = (int)$row['client_id'];
+            $item->sku           = $row['sku'];
+            $item->name          = $row['name'];
+            $item->threshold_qty = (int)$row['threshold_qty'];
+            $item->current_qty   = (int)$row['current_qty'];
+            $item->created_at    = $row['created_at'];
+            $result[] = $item;
+        }
+        return $result;
+    }
+
+    /**
      * Check if a SKU exists for this client (excluding optional item id).
      */
     public static function skuExists(string $sku, int $client_id, ?int $exclude_id = null): bool

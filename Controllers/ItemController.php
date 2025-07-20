@@ -9,30 +9,51 @@ switch ($action)
     // List all items for a client
     case 'items':
     
+        // Clear any old session errors that might be persisting
+        if (isset($_SESSION['errors'])) {
+            unset($_SESSION['errors']);
+        }
+        
         if (empty($_SESSION['user_id'])) {
                     header('Location: index.php?controller=home&action=login');
                     exit;
                 }
                 $user = User::findById($_SESSION['user_id']);
+                if (!$user) {
+                    // User not found in database
+                    $_SESSION['errors'] = ['User session invalid. Please login again.'];
+                    header('Location: index.php?action=loginForm');
+                    exit;
+                }
                 if ($user->role === 'employee') {
                     // deny access
                     $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
                     header('Location: index.php?action=error');
                     exit;
                 }
-        $client_id = $_SESSION['client_id'] ?? 1; // Use actual session logic
+        $client_id = $_SESSION['client_id'] ?? $user->client_id ?? 1; // Use user's client_id if session doesn't have it
         
-        // Pagination parameters
+        // Pagination and filter parameters
         $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
         $per_page = 10; // Items per page
-        $total_items = Item::countByClient($client_id);
+        $stock_filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+        // Validate filter parameter
+        $valid_filters = ['low-stock', 'in-stock', 'out-of-stock'];
+        if ($stock_filter && !in_array($stock_filter, $valid_filters)) {
+            $stock_filter = null;
+        }
+        
+        // Get total items with filter
+        $total_items = Item::countByClientWithFilter($client_id, $stock_filter);
         $total_pages = ceil($total_items / $per_page);
         
         // Ensure page is within valid range
         if ($page < 1) $page = 1;
         if ($page > $total_pages && $total_pages > 0) $page = $total_pages;
         
-        $items = Item::findAllByClientPaginated($client_id, $page, $per_page);
+        // Get items with filter
+        $items = Item::findAllByClientPaginatedWithFilter($client_id, $page, $per_page, $stock_filter);
         
         // Pagination data for view
         $pagination = [
@@ -46,7 +67,7 @@ switch ($action)
             'next_page' => $page + 1
         ];
 
-        include __DIR__ . '/../Views/itemsView.php';
+        include __DIR__ . '/../Views/Item/itemsView.php';
         exit();
 
     // Show edit form and process update
@@ -57,6 +78,12 @@ switch ($action)
                     exit;
                 }
                 $user = User::findById($_SESSION['user_id']);
+                if (!$user) {
+                    // User not found in database
+                    $_SESSION['errors'] = ['User session invalid. Please login again.'];
+                    header('Location: index.php?action=loginForm');
+                    exit;
+                }
                 if ($user->role === 'employee') {
                     // deny access
                     $_SESSION['errors'] = ['Access denied: insufficient permissions.'];
@@ -72,14 +99,14 @@ switch ($action)
 
         if (!$item_id) {
             $errors[] = "No item ID provided.";
-            include __DIR__ . '/../Views/editItem.php';
+            include __DIR__ . '/../Views/Item/editItem.php';
             return;
         }
 
         $item = Item::findById($item_id);
         if (!$item) {
             $errors[] = "Item not found.";
-            include __DIR__ . '/../Views/editItem.php';
+            include __DIR__ . '/../Views/Item/editItem.php';
             return;
         }
 
@@ -109,7 +136,7 @@ switch ($action)
             }
         }
 
-        include __DIR__ . '/../Views/editItem.php';
+        include __DIR__ . '/../Views/Item/editItem.php';
         exit();
 
     // Show delete confirmation page
@@ -130,6 +157,7 @@ switch ($action)
         $item_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $current_page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
+        $stock_filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         
         if (!$item_id || $type !== 'item') {
             header('Location: index.php?action=items');
@@ -149,8 +177,11 @@ switch ($action)
         $item_threshold = $item->threshold_qty;
         $delete_url = 'index.php?action=delete_item';
         $return_url = 'index.php?action=items&page=' . $current_page;
+        if ($stock_filter) {
+            $return_url .= '&filter=' . urlencode($stock_filter);
+        }
 
-        include __DIR__ . '/../Views/deleteConfirm.php';
+        include __DIR__ . '/../Views/Item/deleteConfirm.php';
         exit();
 
     // Handle deleting an item (after confirmation)
@@ -173,6 +204,7 @@ switch ($action)
         $confirm_delete = filter_input(INPUT_POST, 'confirm_delete', FILTER_SANITIZE_STRING);
         $type_confirmation = filter_input(INPUT_POST, 'type_confirmation', FILTER_SANITIZE_STRING);
         $current_page = filter_input(INPUT_POST, 'current_page', FILTER_VALIDATE_INT) ?: 1;
+        $stock_filter = filter_input(INPUT_POST, 'stock_filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         
         if (!$confirmed || !$confirm_delete || $type_confirmation !== 'DELETE') {
             header('Location: index.php?action=items');
@@ -194,7 +226,12 @@ switch ($action)
         } else {
             $_SESSION['errors'] = ['Invalid item ID provided.'];
         }
-        header("Location: index.php?action=items&page=" . $current_page);
+        
+        $redirect_url = "index.php?action=items&page=" . $current_page;
+        if ($stock_filter) {
+            $redirect_url .= "&filter=" . urlencode($stock_filter);
+        }
+        header("Location: " . $redirect_url);
         exit();
 
     // Show add item form and process new item
@@ -246,7 +283,7 @@ switch ($action)
             }
         }
 
-        include __DIR__ . '/../Views/addItem.php';
+        include __DIR__ . '/../Views/Item/addItem.php';
         exit();
 
     // Show create form and process new item (legacy)

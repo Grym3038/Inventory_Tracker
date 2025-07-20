@@ -14,43 +14,37 @@ if (!isset($user) && isset($_SESSION['user_id'])) {
 $is_dark_mode = $_SESSION['dark_mode'] ?? false;
 ?>
 
-<!-- Sidebar -->
-<div class="sidebar">
-    <div class="sidebar-header">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
         <h2><?= $_SESSION["name"] ?? 'User' ?></h2>
-    </div>
-    <div class="sidebar-menu">
+            </div>
+            <div class="sidebar-menu">
         <div class="menu-item <?php echo ($action === 'dashboard' || $action === 'adminDashboard' || $action === 'ownerDashboard' || $action === 'employeeDashboard') ? 'active' : ''; ?>">
-            <i class="fas fa-home"></i>
+                    <i class="fas fa-home"></i>
             <a href="?action=dashboard">Dashboard</a>
-        </div>
+                </div>
         <?php if (isset($user) && $user->role === 'owner'): ?>
-        <div class="menu-item <?= $action === 'home' ? 'active' : '' ?>">
-            <i class="fas fa-chart-line"></i>
-            <a href="?action=home">Analytics</a>
-        </div>
+
         <div class="menu-item <?= $action === 'items' ? 'active' : '' ?>">
-            <i class="fas fa-file-alt"></i>
+                    <i class="fas fa-file-alt"></i>
             <a href="?action=items">Products</a>
-        </div>
+                </div>
         <?php elseif (isset($user) && $user->role === 'admin'): ?>
-        <div class="menu-item <?= $action === 'users' ? 'active' : '' ?>">
-            <i class="fas fa-users"></i>
+                <div class="menu-item <?= $action === 'users' ? 'active' : '' ?>">
+                    <i class="fas fa-users"></i>
             <a href="?action=users">User Management</a>
-        </div>
+                </div>
         <?php endif; ?>
-        <div class="menu-item <?= $action === 'settings' ? 'active' : '' ?>">
-            <i class="fas fa-cog"></i>
+                <div class="menu-item <?= $action === 'settings' ? 'active' : '' ?>">
+                    <i class="fas fa-cog"></i>
             <a href="?action=settings">Settings</a>
-        </div>
-        <div class="menu-item <?= $action === 'paginated_table' ? 'active' : '' ?>">
-            <i class="fas fa-table"></i>
-            <a href="?action=paginated_table">Inventory Table</a>
-        </div>
-    </div>
+                </div>
+
+            </div>
     <div class="sidebar-footer">
-        <i class="fas fa-question-circle"></i>
+                
         <a href="?action=logout" class="text-red-700 hover:text-red-950 font-bold">Logout</a>
-    </div>
-</div>
+            </div>
+        </div>
     
