@@ -70,6 +70,49 @@ class Item
     }
 
     /**
+     * List items for a client with pagination.
+     */
+    public static function findAllByClientPaginated(int $client_id, int $page = 1, int $per_page = 10): array
+    {
+        $db = Database::getConnection();
+        $offset = ($page - 1) * $per_page;
+        
+        $stmt = $db->prepare(
+        'SELECT id, client_id, sku, name, threshold_qty, current_qty, created_at
+         FROM items WHERE client_id = :client_id ORDER BY name LIMIT :limit OFFSET :offset');
+        $stmt->bindValue(':client_id', $client_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $per_page, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $item = new Item();
+            $item->id            = (int)$row['id'];
+            $item->client_id     = (int)$row['client_id'];
+            $item->sku           = $row['sku'];
+            $item->name          = $row['name'];
+            $item->threshold_qty = (int)$row['threshold_qty'];
+            $item->current_qty   = (int)$row['current_qty'];
+            $item->created_at    = $row['created_at'];
+            $result[] = $item;
+        }
+        return $result;
+    }
+
+    /**
+     * Count total items for a client.
+     */
+    public static function countByClient(int $client_id): int
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare('SELECT COUNT(*) FROM items WHERE client_id = :client_id');
+        $stmt->bindValue(':client_id', $client_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
      * Check if a SKU exists for this client (excluding optional item id).
      */
     public static function skuExists(string $sku, int $client_id, ?int $exclude_id = null): bool

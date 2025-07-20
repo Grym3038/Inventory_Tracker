@@ -1,5 +1,5 @@
+<?php include('Views/_partials/dashboardHeader.php'); ?>
 <?php include('Views/_partials/sideBar.php'); ?>
-
 
         <!-- Main Content -->
         <div class="main-content ">
@@ -14,7 +14,7 @@
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge">3</span>
                     </div>
-                    <div class="user-profile">
+                    <div class="user-profile" style="cursor: pointer;" onclick="window.location.href='?action=settings'">
                         <div class="user-avatar"><?php
                         // Split the full name on spaces/hyphens, take each first letter, uppercase it, then join
                         echo implode('', array_map(
@@ -196,17 +196,9 @@
                 alert('You have 3 new notifications');
             });
 
-            // User profile dropdown (simplified)
-            const userProfile = document.querySelector('.user-profile');
-            userProfile.addEventListener('click', function() {
-                alert('User profile menu would open here');
-            });
+            // Note: User profile click is handled by onclick attribute in HTML
+            // No additional event listener needed as it navigates to settings
         });
-</script>
+    </script>
 
-<script src="node_modules\flowbite\dist\flowbite.min.js"></script>
-
-</body>
-
-
-</html>
+<?php include('Views/_partials/footer.php'); ?>

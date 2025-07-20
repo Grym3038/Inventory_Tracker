@@ -41,6 +41,7 @@ CREATE TABLE users (
   email          VARCHAR(255)    NOT NULL,
   password_hash  VARCHAR(255),
   role           VARCHAR(50)     NOT NULL,  -- 'owner' or 'employee'
+  darkmode_on    BOOLEAN         NOT NULL DEFAULT FALSE,
   created_at     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   -- OAuth fields
@@ -57,6 +58,9 @@ CREATE TABLE users (
     FOREIGN KEY (client_id) REFERENCES clients(id)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Migration script for existing databases
+-- ALTER TABLE users ADD COLUMN darkmode_on BOOLEAN NOT NULL DEFAULT FALSE AFTER role;
 
 -- OAuth tokens (if you want to store access/refresh tokens)
 CREATE TABLE oauth_tokens (

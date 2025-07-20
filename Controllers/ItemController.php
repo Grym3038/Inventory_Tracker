@@ -21,7 +21,30 @@ switch ($action)
                     exit;
                 }
         $client_id = $_SESSION['client_id'] ?? 1; // Use actual session logic
-        $items = Item::findAllByClient($client_id);
+        
+        // Pagination parameters
+        $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
+        $per_page = 10; // Items per page
+        $total_items = Item::countByClient($client_id);
+        $total_pages = ceil($total_items / $per_page);
+        
+        // Ensure page is within valid range
+        if ($page < 1) $page = 1;
+        if ($page > $total_pages && $total_pages > 0) $page = $total_pages;
+        
+        $items = Item::findAllByClientPaginated($client_id, $page, $per_page);
+        
+        // Pagination data for view
+        $pagination = [
+            'current_page' => $page,
+            'total_pages' => $total_pages,
+            'total_items' => $total_items,
+            'per_page' => $per_page,
+            'has_previous' => $page > 1,
+            'has_next' => $page < $total_pages,
+            'previous_page' => $page - 1,
+            'next_page' => $page + 1
+        ];
 
         include __DIR__ . '/../Views/itemsView.php';
         exit();
@@ -106,6 +129,7 @@ switch ($action)
 
         $item_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $current_page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
         
         if (!$item_id || $type !== 'item') {
             header('Location: index.php?action=items');
@@ -124,7 +148,7 @@ switch ($action)
         $item_qty = $item->current_qty;
         $item_threshold = $item->threshold_qty;
         $delete_url = 'index.php?action=delete_item';
-        $return_url = 'index.php?action=items';
+        $return_url = 'index.php?action=items&page=' . $current_page;
 
         include __DIR__ . '/../Views/deleteConfirm.php';
         exit();
@@ -148,6 +172,7 @@ switch ($action)
         $confirmed = filter_input(INPUT_POST, 'confirmed', FILTER_VALIDATE_INT);
         $confirm_delete = filter_input(INPUT_POST, 'confirm_delete', FILTER_SANITIZE_STRING);
         $type_confirmation = filter_input(INPUT_POST, 'type_confirmation', FILTER_SANITIZE_STRING);
+        $current_page = filter_input(INPUT_POST, 'current_page', FILTER_VALIDATE_INT) ?: 1;
         
         if (!$confirmed || !$confirm_delete || $type_confirmation !== 'DELETE') {
             header('Location: index.php?action=items');
@@ -169,7 +194,7 @@ switch ($action)
         } else {
             $_SESSION['errors'] = ['Invalid item ID provided.'];
         }
-        header("Location: index.php?action=items");
+        header("Location: index.php?action=items&page=" . $current_page);
         exit();
 
     // Show add item form and process new item

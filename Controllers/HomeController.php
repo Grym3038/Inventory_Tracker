@@ -113,6 +113,7 @@ switch ($action)
                 $_SESSION['fingerprint_ip']     = FINGERPRINT_IP;
                 $_SESSION['name']               = $user->name;
                 $_SESSION['role']               = $user->role;
+                $_SESSION['dark_mode']          = $user->darkmode_on;
 
                 // Extend cookie for "remember me"
                 if ($remember) {
@@ -190,6 +191,7 @@ switch ($action)
                 $user->email            = $email;
                 $user->password_hash    = $hash;
                 $user->role             = 'employee' ;
+                $user->darkmode_on      = false; // Default to light mode
                 // Set client_id to a valid existing client, e.g. from session or default
                 $user->client_id        = $_SESSION['client_id'] ?? 1;
                 $user->save();
@@ -227,5 +229,7 @@ switch ($action)
         case 'redirect':
                 include('Views/redirect.php');
                 exit();
+
+
 
 }

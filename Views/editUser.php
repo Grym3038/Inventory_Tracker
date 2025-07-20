@@ -1,3 +1,4 @@
+<?php include('Views/_partials/dashboardHeader.php'); ?>
 <?php include('Views/_partials/sideBar.php'); ?>
 
 <div class="flex flex-col grow mx-auto px-4 py-8 h-screen items-center pt-10">
@@ -84,9 +85,5 @@
     </div>
   </form>
 </div>
-<script src="node_modules\flowbite\dist\flowbite.min.js"></script>
 
-</body>
-
-
-</html>
+<?php include('Views/_partials/footer.php'); ?>
