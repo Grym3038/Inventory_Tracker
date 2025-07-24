@@ -7,7 +7,7 @@
 <div class="px-4 pt-16 mx-auto  w-full  md:px-24 lg:px-8">
   <div class="grid gap-10 row-gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
     <div class="sm:col-span-2">
-      <a href="/" aria-label="Go home" title="Company" class="inline-flex items-center">
+      <a href="?action=contact" aria-label="Go home" title="Company" class="inline-flex items-center">
         <svg class="w-8 text-deep-purple-accent-400" viewBox="0 0 24 24" stroke-linejoin="round" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" stroke="currentColor" fill="none">
           <rect x="3" y="1" width="7" height="12"></rect>
           <rect x="3" y="17" width="7" height="6"></rect>
@@ -18,10 +18,12 @@
       </a>
       <div class="mt-6 lg:max-w-sm">
         <p class="text-sm text-gray-800">
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
+          Thank you for checking us out! We're excited to keep improving and adding more features to help businesses thrive.
         </p>
         <p class="mt-4 text-sm text-gray-800">
-          Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+          We're a small team passionate about helping businesses stay organized and efficient.
+             Our goal is to make inventory tracking simple, accurate, and accessible—whether you're managing
+             a local shop or keeping track of office supplies.
         </p>
       </div>
     </div>
@@ -69,7 +71,7 @@
         </a>
       </div>
       <p class="mt-4 text-sm text-gray-500">
-        Bacon ipsum dolor amet short ribs pig sausage prosciutto chicken spare ribs salami.
+        We're always here to help! If you have any questions or feedback, feel free to reach out.
       </p>
     </div>
   </div>

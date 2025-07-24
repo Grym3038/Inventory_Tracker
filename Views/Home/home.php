@@ -25,7 +25,7 @@
                 </div>
             </h1>
             <p class="mx-auto mt-3 max-w-xl text-lg text-gray-500 sm:mt-5 md:mt-5">
-                Sub-header: Optimize stock levels, reduce carrying costs, and boost fulfillment speed using AI-driven insights.
+                Optimize stock levels, reduce carrying costs, and boost fulfillment speeds.
            </p>
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center">
                 <div class="rounded-md shadow"><a

@@ -133,7 +133,7 @@
                     Custom integrations
                 </li>
             </ul>
-            <a href="?action=loginForm" class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+            <a href="?action=contact" class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
                 Contact Sales
             </a>
         </div>
