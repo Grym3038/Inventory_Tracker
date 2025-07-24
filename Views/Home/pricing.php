@@ -40,6 +40,8 @@
                     Email support
                 </li>
             </ul>
+            <br>
+            <br>
             <a href="?action=loginForm" class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
                 Get Started
             </a>
