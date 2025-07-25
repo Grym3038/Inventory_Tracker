@@ -115,9 +115,6 @@
     --color-pink-700: #BE185D;
     --color-pink-800: #9D174D;
     --color-pink-900: #831843;
-    --color-slate-200: oklch(92.9% 0.013 255.508);
-    --color-slate-400: oklch(70.4% 0.04 256.788);
-    --color-slate-800: oklch(27.9% 0.041 260.031);
     --color-gray-50: #F9FAFB;
     --color-gray-100: #F3F4F6;
     --color-gray-200: #E5E7EB;
@@ -1522,11 +1519,20 @@
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
+  .h-10 {
+    height: calc(var(--spacing) * 10);
+  }
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
+  .h-15 {
+    height: calc(var(--spacing) * 15);
+  }
   .h-16 {
     height: calc(var(--spacing) * 16);
+  }
+  .h-20 {
+    height: calc(var(--spacing) * 20);
   }
   .h-\[0\.58em\] {
     height: 0.58em;
@@ -1659,11 +1665,20 @@
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
+  .w-10 {
+    width: calc(var(--spacing) * 10);
+  }
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
+  .w-15 {
+    width: calc(var(--spacing) * 15);
+  }
   .w-16 {
     width: calc(var(--spacing) * 16);
+  }
+  .w-20 {
+    width: calc(var(--spacing) * 20);
   }
   .w-32 {
     width: calc(var(--spacing) * 32);
@@ -1697,9 +1712,6 @@
   }
   .max-w-6xl {
     max-width: var(--container-6xl);
-  }
-  .max-w-\[400px\] {
-    max-width: 400px;
   }
   .max-w-\[500px\] {
     max-width: 500px;
@@ -2326,9 +2338,6 @@
   .bg-blue-700 {
     background-color: var(--color-blue-700);
   }
-  .bg-blue-800 {
-    background-color: var(--color-blue-800);
-  }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
   }
@@ -2449,6 +2458,9 @@
   }
   .bg-clip-text {
     background-clip: text;
+  }
+  .bg-center {
+    background-position: center;
   }
   .apexcharts-datalabels-group {
     & .apexcharts-text.apexcharts-datalabel-value {
