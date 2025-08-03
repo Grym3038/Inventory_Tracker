@@ -1,4 +1,3 @@
-
 # ShelfAware – Inventory Tracking System
 
 ShelfAware (also referred to in the code as **Inventory_Tracker**) is a web-based  
@@ -42,7 +41,7 @@ Models (User, Item, Database, AdminDBAccess), Views, and a front controller
    ```bash
    git clone https://github.com/Grym3038/Inventory_Tracker.git
    cd Inventory_Tracker
-```
+   ```
 
 2. **Install PHP dependencies**
 
