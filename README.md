@@ -113,5 +113,4 @@ MIT License
 
 ```
 
-You can copy and paste the above into your own `README.md` file. Let me know if you need any tweaks!
-```
+
